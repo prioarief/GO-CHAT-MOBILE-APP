@@ -1,2 +1,3 @@
-import TopNavigation from './TopNavigation';
-export {TopNavigation};
+import ChatList from './ChatList';
+import ChatItem from './ChatItem';
+export {ChatList, ChatItem};

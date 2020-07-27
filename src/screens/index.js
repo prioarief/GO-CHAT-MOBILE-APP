@@ -1,4 +1,6 @@
 import Login from './Login';
 import Register from './Register';
+import ListChat from './ListChat';
+import Chat from './Chat';
 
-export {Login, Register};
+export {Login, Register, ListChat, Chat};
