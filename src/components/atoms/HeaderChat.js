@@ -20,7 +20,8 @@ const HeaderChat = ({navigation}) => {
             'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
         }}
       />
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Profile', {isMe: false})}>
         <Text style={styles.profile}>Prio Arief Gunawan</Text>
         <Text style={styles.status}>Online</Text>
       </TouchableOpacity>
