@@ -1,6 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View, Image} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Profile} from '../../assets';
 
@@ -9,7 +8,12 @@ const HeaderProfile = ({navigation}) => {
     <View style={styles.content}>
       <View style={styles.profile_content}>
         <TouchableOpacity
-          onPress={() => navigation.navigate('Avatar', {image: Profile})}>
+          onPress={() =>
+            navigation.navigate('Avatar', {
+              image:
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcShi2vPDOkXvjMhrDuNwsxqh5RB0d1f1ZADVw&usqp=CAU',
+            })
+          }>
           <Image style={styles.image} source={Profile} />
         </TouchableOpacity>
         <Text style={styles.profile}>Prio Arief Gunawan</Text>

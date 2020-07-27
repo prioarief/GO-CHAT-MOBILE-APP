@@ -11,6 +11,7 @@ import {
   Register,
   Avatar,
   FriendList,
+  EditProfile,
 } from '../screens';
 
 const Stack = createStackNavigator();
@@ -59,6 +60,11 @@ const App = () => {
       <Stack.Screen
         name="Profile"
         component={Profile}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Edit Profile"
+        component={EditProfile}
         options={{headerShown: false}}
       />
       <Stack.Screen

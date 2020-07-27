@@ -3,12 +3,12 @@ import {StyleSheet, Text, View} from 'react-native';
 import {Button, Input} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-const Login = ({navigation}) => {
+const EditProfile = ({navigation}) => {
+  const handleEdit = () => {
+    navigation.replace('MainApp');
+  };
   return (
     <View style={styles.container}>
-      <Text title="" style={styles.title}>
-        Welcome Back, Please Register to get your account
-      </Text>
       <Input
         importantForAutofill="yes"
         placeholderTextColor="#cccccc"
@@ -31,7 +31,7 @@ const Login = ({navigation}) => {
         style={styles.input}
         placeholderTextColor="#cccccc"
         inputStyle={styles.input}
-        placeholder="Password"
+        placeholder="fill to change password"
         secureTextEntry
         // value={user.password}
         // onChangeText={(input) => setUser({...user, password: input})}
@@ -39,24 +39,23 @@ const Login = ({navigation}) => {
       />
 
       <Button
+        titleStyle={styles.button_image}
+        buttonStyle={styles.button_image}
+        containerStyle={{marginBottom: 10, width: 120}}
+        title="Choose Image"
+        onPress={handleEdit}
+      />
+      <Button
         titleStyle={styles.button}
         buttonStyle={styles.button}
-        title="Register"
-        // onPress={handleLogin}
+        title="Edit"
+        onPress={handleEdit}
       />
-      <View style={styles.register}>
-        <Text style={styles.not}>Already Account?</Text>
-        <Text
-          style={styles.button_register}
-          onPress={() => navigation.replace('Login')}>
-          Login
-        </Text>
-      </View>
     </View>
   );
 };
 
-export default Login;
+export default EditProfile;
 
 const styles = StyleSheet.create({
   input: {
@@ -74,6 +73,11 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     color: '#cccccc',
   },
+  button_image: {
+    color: 'black',
+    backgroundColor: 'orange',
+    // borderBottomStartRadius: 17,
+  },
   container: {
     flex: 1,
     backgroundColor: '#333333',
@@ -86,7 +90,7 @@ const styles = StyleSheet.create({
     color: '#cccccc',
   },
   title: {
-    fontSize: 25,
+    fontSize: 30,
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',

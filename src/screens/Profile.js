@@ -11,7 +11,7 @@ const Profile = ({navigation, route}) => {
     if (route.params === undefined) {
       return (
         <>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Edit Profile')}>
             <ListItem
               titleStyle={styles.item}
               key={3}
@@ -34,12 +34,11 @@ const Profile = ({navigation, route}) => {
               titleStyle={styles.item}
               key={3}
               leftIcon={<Icon name="map-marker-alt" size={20} color="black" />}
-              s
               title="My Location"
               bottomDivider
             />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.replace('Login')}>
             <ListItem
               titleStyle={styles.item}
               key={3}
