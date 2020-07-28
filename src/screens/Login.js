@@ -1,11 +1,31 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Button, Input} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {connect} from 'react-redux';
+import {Login as LoginProcess} from '../redux/actions/auth';
+import {showMessage} from 'react-native-flash-message';
 
-const Login = ({navigation}) => {
-  const handleLogin = () => {
-    navigation.replace('MainApp');
+const Login = ({navigation, auth, dispatch}) => {
+  const [user, setUser] = useState({username: '', password: ''});
+  const handleLogin = async () => {
+    const data = {
+      username: user.username,
+      password: user.password,
+    };
+
+    await dispatch(LoginProcess(data))
+      .then((res) => {
+        navigation.replace('MainApp');
+      })
+      .catch((err) => {
+        showMessage({
+          message: err.response.data.data,
+          type: 'error',
+          backgroundColor: 'red',
+          color: 'white',
+        });
+      });
   };
   return (
     <View style={styles.container}>
@@ -17,8 +37,8 @@ const Login = ({navigation}) => {
         placeholderTextColor="#cccccc"
         inputStyle={styles.input}
         placeholder="Username"
-        // value={user.email}
-        // onChangeText={(input) => setUser({...user, email: input})}
+        value={user.username}
+        onChangeText={(input) => setUser({...user, username: input})}
         leftIcon={<Icon name="user-circle" size={24} color="#cccccc" />}
       />
       <Input
@@ -27,8 +47,8 @@ const Login = ({navigation}) => {
         inputStyle={styles.input}
         placeholder="Password"
         secureTextEntry
-        // value={user.password}
-        // onChangeText={(input) => setUser({...user, password: input})}
+        value={user.password}
+        onChangeText={(input) => setUser({...user, password: input})}
         leftIcon={<Icon name="lock" size={24} color="#cccccc" />}
       />
 
@@ -50,7 +70,10 @@ const Login = ({navigation}) => {
   );
 };
 
-export default Login;
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
+export default connect(mapStateToProps)(Login);
 
 const styles = StyleSheet.create({
   input: {

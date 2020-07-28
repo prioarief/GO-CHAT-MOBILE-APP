@@ -1,17 +1,16 @@
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
-import {StyleSheet} from 'react-native';
 import 'react-native-gesture-handler';
 import {
+  Avatar,
   Chat,
+  EditProfile,
+  FriendList,
   ListChat,
   Login,
   Profile,
   Register,
-  Avatar,
-  FriendList,
-  EditProfile,
 } from '../screens';
 
 const Stack = createStackNavigator();
@@ -77,5 +76,3 @@ const App = () => {
 };
 
 export default App;
-
-const styles = StyleSheet.create({});

@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {Button, Input} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
@@ -41,7 +41,7 @@ const EditProfile = ({navigation}) => {
       <Button
         titleStyle={styles.button_image}
         buttonStyle={styles.button_image}
-        containerStyle={{marginBottom: 10, width: 120}}
+        containerStyle={styles.containerButton}
         title="Choose Image"
         onPress={handleEdit}
       />
@@ -101,4 +101,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  containerButton: {marginBottom: 10, width: 120},
 });
