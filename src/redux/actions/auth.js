@@ -22,25 +22,24 @@ export const Register = (data) => {
       method: 'POST',
       url: `${API_URL}/api/auth/register`,
       data: {
-        email: data.email,
+        username: data.username,
         password: data.password,
         name: data.name,
-        role: 2,
       },
     }),
   };
 };
 
-export const Activation = (data) => {
+export const editProfile = (token, data) => {
   return {
-    type: 'ACTIVATION',
+    type: 'EDIT',
     payload: axios({
-      method: 'POST',
-      url: 'http://localhost:3000/api/auth/activation',
-      data: {
-        email: data.email,
-        code: data.code,
+      method: 'PUT',
+      url: `${API_URL}/api/auth/profile`,
+      headers: {
+        Authorization: token,
       },
+      data: data,
     }),
   };
 };

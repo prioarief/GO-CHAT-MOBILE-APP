@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Button, Input} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -8,6 +8,7 @@ import {showMessage} from 'react-native-flash-message';
 
 const Login = ({navigation, auth, dispatch}) => {
   const [user, setUser] = useState({username: '', password: ''});
+
   const handleLogin = async () => {
     const data = {
       username: user.username,
@@ -27,6 +28,13 @@ const Login = ({navigation, auth, dispatch}) => {
         });
       });
   };
+
+  useEffect(() => {
+    if (auth.data.token) {
+      return navigation.replace('MainApp');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <View style={styles.container}>
       <Text title="" style={styles.title}>

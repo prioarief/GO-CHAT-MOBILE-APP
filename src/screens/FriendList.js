@@ -1,41 +1,58 @@
 import React, {Component} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {FriendList} from '../components/molecules';
+import {connect} from 'react-redux';
+import {getContact} from '../redux/actions/profile';
+import {API_URL} from '@env';
 
-export default class ListChat extends Component {
+class Friends extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      contact: [],
+    };
+  }
+
+  getFriendList = async () => {
+    await this.props
+      .dispatch(getContact(this.props.auth.data.token))
+      .then(async (res) => {
+        await this.setState({contact: this.props.profile.data});
+      })
+      .catch((err) => console.log(err));
+  };
+  componentDidMount() {
+    this.getFriendList();
   }
   render() {
     const {navigation} = this.props;
     return (
       <View style={styles.content}>
         <ScrollView>
-          <FriendList
-            name="Prio Arief"
-            image="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcShi2vPDOkXvjMhrDuNwsxqh5RB0d1f1ZADVw&usqp=CAU"
-            onPress={() => navigation.navigate('Chat')}
-          />
-          <FriendList
-            name="Prio Arief Gunawan"
-            image="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcShi2vPDOkXvjMhrDuNwsxqh5RB0d1f1ZADVw&usqp=CAU"
-            onPress={() => navigation.navigate('Chat')}
-          />
-          <FriendList
-            name="Lionel Messi"
-            image="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcShi2vPDOkXvjMhrDuNwsxqh5RB0d1f1ZADVw&usqp=CAU"
-            onPress={() => navigation.navigate('Chat')}
-          />
-          <FriendList
-            name="Kylian Mbappe"
-            image="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcShi2vPDOkXvjMhrDuNwsxqh5RB0d1f1ZADVw&usqp=CAU"
-            onPress={() => navigation.navigate('Chat')}
-          />
+          {this.state.contact.map((data) => {
+            return (
+              <FriendList
+                key={data.id}
+                name={data.friendName}
+                image={
+                  data.friendImage === null
+                    ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcShi2vPDOkXvjMhrDuNwsxqh5RB0d1f1ZADVw&usqp=CAU'
+                    : `${API_URL}/images/${data.friendImage}`
+                }
+                onPress={() => navigation.navigate('Chat', {id: data.id})}
+              />
+            );
+          })}
         </ScrollView>
       </View>
     );
   }
 }
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  profile: state.profile,
+});
+export default connect(mapStateToProps)(Friends);
 
 const styles = StyleSheet.create({
   content: {flex: 1, backgroundColor: 'black'},

@@ -41,26 +41,25 @@ const auth = (state = inialState, action) => {
     case 'REGISTER_FULFILLED': {
       return {
         ...state,
-        data: action.payload.data.data.data[0],
+        data: action.payload.data.data,
       };
     }
-
-    case 'ACTIVATION_PENDING': {
+    case 'EDIT_PENDING': {
       return {
         ...state,
         data: {},
       };
     }
-    case 'ACTIVATION_REJECTED': {
+    case 'EDIT_REJECTED': {
       return {
         ...state,
         data: {},
       };
     }
-    case 'ACTIVATION_FULFILLED': {
+    case 'EDIT_FULFILLED': {
       return {
         ...state,
-        data: action.payload,
+        data: action.payload.data.data,
       };
     }
 

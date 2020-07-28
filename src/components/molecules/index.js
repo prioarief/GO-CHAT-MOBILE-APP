@@ -1,4 +1,6 @@
 import ChatList from './ChatList';
 import FriendList from './FriendList';
 import ChatItem from './ChatItem';
-export {ChatList, ChatItem, FriendList};
+import Loading from './Loading';
+
+export {ChatList, ChatItem, FriendList, Loading};

@@ -1,9 +1,27 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, Text, View, Image} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {API_URL} from '@env';
+import {connect} from 'react-redux';
 
-const HeaderChat = ({navigation}) => {
+const HeaderChat = ({navigation, name, image, id, auth}) => {
+  const [status, setStatus] = useState(false);
+  const [isMe, setIsMe] = useState(false);
+
+  const meCheck = () => {
+    if (id !== auth.data.id) {
+      return setIsMe(id);
+    }
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      setStatus(true);
+    }, 500);
+    meCheck();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <View style={styles.content}>
       <Icon
@@ -17,19 +35,24 @@ const HeaderChat = ({navigation}) => {
         style={styles.image}
         source={{
           uri:
-            'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+            image === null
+              ? 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg'
+              : `${API_URL}/images/${image}`,
         }}
       />
       <TouchableOpacity
-        onPress={() => navigation.navigate('Profile', {isMe: false})}>
-        <Text style={styles.profile}>Prio Arief Gunawan</Text>
-        <Text style={styles.status}>Online</Text>
+        onPress={() => navigation.navigate('Profile', {isMe: isMe})}>
+        <Text style={styles.profile}>{name}</Text>
+        {status && <Text style={styles.status}>Online</Text>}
       </TouchableOpacity>
     </View>
   );
 };
-
-export default HeaderChat;
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  profile: state.profile,
+});
+export default connect(mapStateToProps)(HeaderChat);
 
 const styles = StyleSheet.create({
   content: {

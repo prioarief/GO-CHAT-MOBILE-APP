@@ -1,22 +1,20 @@
 import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {Profile} from '../../assets';
 
-const HeaderProfile = ({navigation}) => {
+const HeaderProfile = ({navigation, name, image}) => {
   return (
     <View style={styles.content}>
       <View style={styles.profile_content}>
         <TouchableOpacity
           onPress={() =>
             navigation.navigate('Avatar', {
-              image:
-                'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcShi2vPDOkXvjMhrDuNwsxqh5RB0d1f1ZADVw&usqp=CAU',
+              image: image,
             })
           }>
-          <Image style={styles.image} source={Profile} />
+          <Image style={styles.image} source={{uri: image}} />
         </TouchableOpacity>
-        <Text style={styles.profile}>Prio Arief Gunawan</Text>
+        <Text style={styles.profile}>{name}</Text>
         <Text style={styles.bio}>Hello there, Iam using GoChat</Text>
       </View>
     </View>
