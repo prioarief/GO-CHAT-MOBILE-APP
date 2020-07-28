@@ -61,8 +61,7 @@ const EditProfile = ({navigation, auth, dispatch}) => {
         type: 'error',
       });
     }
-    actionEdit();
-    return navigation.replace('MainApp');
+    return actionEdit();
   };
 
   const handleImage = () => {
