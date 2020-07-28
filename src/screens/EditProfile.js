@@ -5,9 +5,9 @@ import {Button, Input} from 'react-native-elements';
 import {showMessage} from 'react-native-flash-message';
 import ImagePicker from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {connect, useStore} from 'react-redux';
-import {editProfile} from '../redux/actions/auth';
+import {connect} from 'react-redux';
 import {Loading} from '../components/molecules';
+import {editProfile} from '../redux/actions/auth';
 
 const EditProfile = ({navigation, auth, dispatch}) => {
   const [loading, setLoading] = useState(false);
@@ -78,12 +78,12 @@ const EditProfile = ({navigation, auth, dispatch}) => {
   return (
     <>
       <View style={styles.container}>
-        <View style={{alignItems: 'center', paddingBottom: 20}}>
+        <View style={styles.containerImage}>
           <Image
             source={{
               uri: user.image.uri || `${API_URL}/images/${auth.data.image}`,
             }}
-            style={{width: 150, height: 150, borderRadius: 150 / 2}}
+            style={styles.image}
           />
         </View>
         <Input
@@ -183,4 +183,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   containerButton: {marginBottom: 10, width: 120},
+  containerImage: {alignItems: 'center', paddingBottom: 20},
+  image: {width: 150, height: 150, borderRadius: 150 / 2},
 });
