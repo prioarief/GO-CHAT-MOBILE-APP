@@ -11,12 +11,15 @@ import {Logout} from '../redux/actions/auth';
 const Profile = ({navigation, route, auth, profile, dispatch, chat}) => {
   // const [user, setUser] = useState('');
   const Avatar = () => {
+    let isFriend = null;
     if (route.params === undefined) {
+      isFriend = true;
       return (
         <>
           <HeaderProflie
             navigation={navigation}
             name={auth.data.name}
+            isFriend={isFriend}
             image={
               auth.data.image === null
                 ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcShi2vPDOkXvjMhrDuNwsxqh5RB0d1f1ZADVw&usqp=CAU'
@@ -38,8 +41,10 @@ const Profile = ({navigation, route, auth, profile, dispatch, chat}) => {
 
     if (getData[0] !== undefined) {
       user = getData[0];
+      isFriend = true;
     } else {
       user = getChatData[0];
+      isFriend = false;
     }
     console.log(user);
 
@@ -48,6 +53,8 @@ const Profile = ({navigation, route, auth, profile, dispatch, chat}) => {
         <HeaderProflie
           navigation={navigation}
           name={user.friendName || user.name}
+          isFriend={isFriend}
+          id={user.idFriend || user.user}
           image={
             user.friendImage === null
               ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcShi2vPDOkXvjMhrDuNwsxqh5RB0d1f1ZADVw&usqp=CAU'
@@ -59,6 +66,7 @@ const Profile = ({navigation, route, auth, profile, dispatch, chat}) => {
   };
 
   const Content = () => {
+    // console.log(isFriend);
     const handleLogout = async () => {
       await dispatch(Logout());
       navigation.replace('Login');

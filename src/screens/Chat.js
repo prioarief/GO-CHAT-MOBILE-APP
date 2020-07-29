@@ -24,9 +24,9 @@ class Chat extends Component {
 
     await dispatch(getMessage(auth.data.token, route.params.id))
       .then(async (res) => {
-        this.setState({message: this.props.chat.chat});
         await dispatch(getMyChat(auth.data.token));
-        console.log(this.state.message);
+        await this.setState({message: this.props.chat.chat});
+        console.log(this.props.chat);
       })
       .catch((err) => {
         console.log(err.response);
@@ -83,6 +83,7 @@ class Chat extends Component {
         <ScrollView showsHorizontalScrollIndicator={false}>
           <Text style={styles.date}>27 July 2020</Text>
           {message.map((msg) => {
+            console.log(msg);
             return (
               <ChatItem
                 key={msg._id}

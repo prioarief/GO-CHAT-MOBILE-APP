@@ -1,8 +1,30 @@
 import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {Button} from 'react-native-elements';
+import {connect} from 'react-redux';
+import {addContact as add, getContact} from '../../redux/actions/profile';
 
-const HeaderProfile = ({navigation, name, image}) => {
+const HeaderProfile = ({
+  navigation,
+  name,
+  image,
+  isFriend,
+  auth,
+  profile,
+  dispatch,
+  id,
+}) => {
+  const addContact = async () => {
+    // console.log(id);
+    await dispatch(add(auth.data.token, id))
+      .then(async () => {
+        await dispatch(getContact(auth.data.token)).then(async () =>
+          navigation.navigate('MainApp'),
+        );
+      })
+      .catch((err) => console.log(err.response));
+  };
   return (
     <View style={styles.content}>
       <View style={styles.profile_content}>
@@ -16,12 +38,25 @@ const HeaderProfile = ({navigation, name, image}) => {
         </TouchableOpacity>
         <Text style={styles.profile}>{name}</Text>
         <Text style={styles.bio}>Hello there, Iam using GoChat</Text>
+        {!isFriend && (
+          <Button
+            title="Add Contact"
+            buttonStyle={{backgroundColor: 'orange'}}
+            containerStyle={{paddingVertical: 10}}
+            onPress={() => addContact()}
+          />
+        )}
       </View>
     </View>
   );
 };
 
-export default HeaderProfile;
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  profile: state.profile,
+  chat: state.chat,
+});
+export default connect(mapStateToProps)(HeaderProfile);
 
 const styles = StyleSheet.create({
   content: {

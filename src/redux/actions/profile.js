@@ -13,3 +13,16 @@ export const getContact = (token) => {
     }),
   };
 };
+
+export const addContact = (token, id) => {
+  return {
+    type: 'ADD',
+    payload: axios({
+      method: 'PUT',
+      url: `${API_URL}/api/auth/contact/${id}`,
+      headers: {
+        Authorization: token,
+      },
+    }),
+  };
+};
