@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {ListItem} from 'react-native-elements';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -6,8 +6,10 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import {HeaderProflie} from '../components/atoms';
 import {connect} from 'react-redux';
 import {API_URL} from '@env';
+import {Logout} from '../redux/actions/auth';
 
-const Profile = ({navigation, route, auth, profile}) => {
+const Profile = ({navigation, route, auth, profile, dispatch, chat}) => {
+  // const [user, setUser] = useState('');
   const Avatar = () => {
     if (route.params === undefined) {
       return (
@@ -24,22 +26,32 @@ const Profile = ({navigation, route, auth, profile}) => {
         </>
       );
     }
+    let user = {};
     const data = profile.data;
+    const ChatData = chat.data;
     const getData = data.filter((val) => {
-      return val.id === route.params.isMe;
+      return val.idFriend === route.params.isMe;
+    });
+    const getChatData = ChatData.filter((val) => {
+      return val.user === route.params.isMe;
     });
 
-    const {friendName, friendImage} = getData[0];
+    if (getData[0] !== undefined) {
+      user = getData[0];
+    } else {
+      user = getChatData[0];
+    }
+    console.log(user);
 
     return (
       <>
         <HeaderProflie
           navigation={navigation}
-          name={friendName}
+          name={user.friendName || user.name}
           image={
-            friendImage === null
+            user.friendImage === null
               ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcShi2vPDOkXvjMhrDuNwsxqh5RB0d1f1ZADVw&usqp=CAU'
-              : `${API_URL}/images/${friendImage}`
+              : `${API_URL}/images/${user.friendImage || user.image}`
           }
         />
       </>
@@ -47,6 +59,10 @@ const Profile = ({navigation, route, auth, profile}) => {
   };
 
   const Content = () => {
+    const handleLogout = async () => {
+      await dispatch(Logout());
+      navigation.replace('Login');
+    };
     if (route.params === undefined) {
       return (
         <>
@@ -77,7 +93,7 @@ const Profile = ({navigation, route, auth, profile}) => {
               bottomDivider
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.replace('Login')}>
+          <TouchableOpacity onPress={() => handleLogout()}>
             <ListItem
               titleStyle={styles.item}
               key={3}
@@ -102,6 +118,7 @@ const Profile = ({navigation, route, auth, profile}) => {
 const mapStateToProps = (state) => ({
   auth: state.auth,
   profile: state.profile,
+  chat: state.chat,
 });
 export default connect(mapStateToProps)(Profile);
 

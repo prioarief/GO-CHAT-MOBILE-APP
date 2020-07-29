@@ -1,5 +1,5 @@
 import {API_URL} from '@env';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {Button, Input} from 'react-native-elements';
 import {showMessage} from 'react-native-flash-message';
@@ -18,12 +18,17 @@ const EditProfile = ({navigation, auth, dispatch}) => {
     image: auth.data.image,
   });
 
+  useEffect(() => {
+    console.log(auth.data.token);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const actionEdit = async () => {
     setLoading(true);
     const data = new FormData();
     data.append('username', user.username);
     data.append('name', user.name);
-    typeof user.image === 'string'
+    typeof user.image === 'string' || user.image === null
       ? null
       : data.append('image', {
           uri: user.image.uri,
@@ -33,6 +38,7 @@ const EditProfile = ({navigation, auth, dispatch}) => {
     user.password === null || user.password === ''
       ? null
       : data.append('password', user.password);
+    console.log(auth);
 
     await dispatch(editProfile(auth.data.token, data))
       .then((res) => {
@@ -41,25 +47,28 @@ const EditProfile = ({navigation, auth, dispatch}) => {
       })
 
       .catch((err) => {
-        console.log(err);
+        console.log(err.response);
         setLoading(false);
       });
   };
 
   const handleEdit = () => {
-    if (user.image.type === undefined && user.image.fileSize === undefined) {
+    if (user.image !== null) {
+      if (user.image.type === undefined && user.image.fileSize === undefined) {
+        return actionEdit();
+      }
+      if (
+        user.image.fileSize >= 1000000 ||
+        (user.image.type !== 'image/jpeg' && user.image.type !== 'image/png')
+      ) {
+        return showMessage({
+          backgroundColor: 'red',
+          color: 'white',
+          message: 'File too large, max 1mb. Just support png or jpg file',
+          type: 'error',
+        });
+      }
       return actionEdit();
-    }
-    if (
-      user.image.fileSize >= 700000 ||
-      (user.image.type !== 'image/jpeg' && user.image.type !== 'image/png')
-    ) {
-      return showMessage({
-        backgroundColor: 'red',
-        color: 'white',
-        message: 'File too large, max 700kb. Just support png or jpg file',
-        type: 'error',
-      });
     }
     return actionEdit();
   };
@@ -79,12 +88,14 @@ const EditProfile = ({navigation, auth, dispatch}) => {
     <>
       <View style={styles.container}>
         <View style={styles.containerImage}>
-          <Image
-            source={{
-              uri: user.image.uri || `${API_URL}/images/${auth.data.image}`,
-            }}
-            style={styles.image}
-          />
+          {user.image !== null && (
+            <Image
+              source={{
+                uri: user.image.uri || `${API_URL}/images/${auth.data.image}`,
+              }}
+              style={styles.image}
+            />
+          )}
         </View>
         <Input
           importantForAutofill="yes"

@@ -62,7 +62,6 @@ class Chat extends Component {
     if (getData[0] !== undefined) {
       return await this.setState({name: getData[0]});
     }
-    console.log(getChatData);
     return await this.setState({name: getChatData[0]});
   };
 
