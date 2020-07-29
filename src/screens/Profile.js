@@ -68,7 +68,7 @@ const Profile = ({navigation, route, auth, profile}) => {
               bottomDivider
             />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Maps')}>
             <ListItem
               titleStyle={styles.item}
               key={3}

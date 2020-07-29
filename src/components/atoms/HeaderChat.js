@@ -35,7 +35,7 @@ const HeaderChat = ({navigation, name, image, id, auth}) => {
         style={styles.image}
         source={{
           uri:
-            image === null
+            image === null || image === undefined
               ? 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg'
               : `${API_URL}/images/${image}`,
         }}

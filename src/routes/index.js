@@ -11,6 +11,8 @@ import {
   Login,
   Profile,
   Register,
+  Gifted,
+  Maps,
 } from '../screens';
 
 const Stack = createStackNavigator();
@@ -29,6 +31,7 @@ const MainApp = () => {
       }}>
       <Tab.Screen name="Message" component={ListChat} />
       <Tab.Screen name="Contact" component={FriendList} />
+      {/* <Tab.Screen name="Gifted" component={Gifted} /> */}
       <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
   );
@@ -56,6 +59,11 @@ const App = () => {
         component={Chat}
         options={{headerShown: false}}
       />
+      {/* <Stack.Screen
+        name="Maps"
+        component={Maps}
+        options={{headerShown: false}}
+      /> */}
       <Stack.Screen
         name="Profile"
         component={Profile}

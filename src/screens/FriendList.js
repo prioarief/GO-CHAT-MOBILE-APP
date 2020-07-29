@@ -18,6 +18,7 @@ class Friends extends Component {
       .dispatch(getContact(this.props.auth.data.token))
       .then(async (res) => {
         await this.setState({contact: this.props.profile.data});
+        console.log(this.state.contact.length);
       })
       .catch((err) => console.log(err));
   };
@@ -30,6 +31,7 @@ class Friends extends Component {
       <View style={styles.content}>
         <ScrollView>
           {this.state.contact.map((data) => {
+            // console.log(data);
             return (
               <FriendList
                 key={data.id}
@@ -39,7 +41,12 @@ class Friends extends Component {
                     ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcShi2vPDOkXvjMhrDuNwsxqh5RB0d1f1ZADVw&usqp=CAU'
                     : `${API_URL}/images/${data.friendImage}`
                 }
-                onPress={() => navigation.navigate('Chat', {id: data.id})}
+                onPress={() =>
+                  navigation.navigate('Chat', {
+                    id: data.idFriend,
+                    isFriend: true,
+                  })
+                }
               />
             );
           })}

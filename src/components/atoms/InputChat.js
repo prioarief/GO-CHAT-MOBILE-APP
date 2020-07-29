@@ -3,17 +3,20 @@ import {StyleSheet, TextInput, View} from 'react-native';
 import {Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-const HeaderChat = () => {
+const HeaderChat = ({onPress, value, onChangeText}) => {
   return (
     <View style={styles.content}>
       <TextInput
         placeholder="Send message"
         placeholderTextColor="white"
+        value={value}
+        onChangeText={onChangeText}
         style={styles.input_message}
       />
       <Button
         icon={<Icon name="paper-plane" color="white" size={22} />}
         buttonStyle={styles.button_send}
+        onPress={onPress}
       />
     </View>
   );

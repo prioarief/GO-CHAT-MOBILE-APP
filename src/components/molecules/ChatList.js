@@ -3,8 +3,17 @@ import {Image, StyleSheet, View} from 'react-native';
 import {ListItem} from 'react-native-elements';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Checked, CheckedActive} from '../../assets';
+import {API_URL} from '@env';
 
-const ChatList = ({name, message, time, status, onPress, onLongPress}) => {
+const ChatList = ({
+  name,
+  message,
+  time,
+  status,
+  onPress,
+  onLongPress,
+  image,
+}) => {
   return (
     <View>
       <TouchableOpacity onLongPress={onLongPress} onPress={onPress}>
@@ -15,13 +24,15 @@ const ChatList = ({name, message, time, status, onPress, onLongPress}) => {
           leftAvatar={{
             source: {
               uri:
-                'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+                image === null
+                  ? 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg'
+                  : `${API_URL}/images/${image}`,
             },
           }}
           subtitle={message}
           title={name}
           rightSubtitle={time}
-          rightTitle={<Image source={status ? CheckedActive : Checked} />}
+          // rightTitle={<Image source={status ? CheckedActive : Checked} />}
           rightSubtitleStyle={styles.time}
           bottomDivider
         />

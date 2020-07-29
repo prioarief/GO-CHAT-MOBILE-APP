@@ -2,7 +2,6 @@ import React from 'react';
 import {Dimensions, Image, StyleSheet, View} from 'react-native';
 
 const Avatar = ({route}) => {
-  console.log(route.params.image);
   return (
     <View style={styles.container}>
       <Image source={{uri: route.params.image}} style={styles.image} />

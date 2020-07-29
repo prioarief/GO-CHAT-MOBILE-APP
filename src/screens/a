@@ -1,0 +1,200 @@
+import React, {useEffect, useState, useCallback} from 'react';
+import {ImageBackground, StyleSheet, Text} from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
+import {Background} from '../assets';
+import {Header, InputChat} from '../components/atoms';
+import {ChatItem} from '../components/molecules';
+import {connect} from 'react-redux';
+import {GiftedChat} from 'react-native-gifted-chat';
+import {sendMessage, getMyChat, getMessage} from '../redux/actions/chat';
+
+const Chat = ({navigation, route, auth, profile, chat, dispatch}) => {
+  const [name, setName] = useState('');
+  const [messages, setMessages] = useState([]);
+
+  const getChat = async () => {
+    await dispatch(getMessage(auth.data.token, route.params.id))
+      .then(async (res) => {
+        await dispatch(getMyChat(auth.data.token));
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const getContact = async () => {
+    const data = profile.data;
+    const ChatData = chat.data;
+    const getData = data.filter((val) => {
+      return val.idFriend === route.params.id;
+    });
+    const getChatData = ChatData.filter((val) => {
+      return val.sender === route.params.id;
+    });
+
+    if (getData[0] !== undefined) {
+      return await setName(getData[0]);
+    }
+    // console.log(getChatData);
+    return await setName(getChatData[0]);
+  };
+
+  const onSend = useCallback(async (val = []) => {
+    const msg = val[0].text;
+    await dispatch(sendMessage(auth.data.token, route.params.id, msg)).then(
+      async (res) => {
+        console.log(res);
+        await dispatch(getMyChat(auth.data.token));
+      },
+    );
+    // console.log(msg);
+    // val[0].sent = true;
+    val[0].received = true;
+    // (val[0].image = 'https://facebook.github.io/react/img/logo_og.png'),
+    // val[0].pending = true;
+    // console.log(val);
+    setMessages((previousMessages) => GiftedChat.append(previousMessages, val));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    // console.log(route.params.id);
+    getContact();
+    getChat().then(async () => {
+      console.log('oke');
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  return (
+    <>
+      <Header
+        name={name.friendName}
+        image={name.image}
+        navigation={navigation}
+      />
+      <GiftedChat
+        messages={messages}
+        onSend={(val) => onSend(val)}
+        user={{
+          _id: 1,
+        }}
+      />
+    </>
+    // <ImageBackground source={Background} style={styles.container}>
+    //   <Header
+    //     navigation={navigation}
+    //     name={name.friendName || name.name}
+    //     image={name.friendImage || name.image}
+    //     id={route.params.id}
+    //   />
+    //   <ScrollView showsHorizontalScrollIndicator={false}>
+    //     <Text style={styles.date}>27 July 2020</Text>
+    //     <ChatItem
+    //       isMe={true}
+    //       message="Selamat Malam, saya Prio Arief Gunawan. Senang bertemu anda"
+    //       date="4.20 AM"
+    //     />
+    //     <ChatItem isMe={false} message="Selamat Malam" date="4.20 AM" />
+    //     <ChatItem isMe={true} message="Apa kabar?" date="4.20 AM" />
+    //     <ChatItem isMe={false} message="Baik" date="4.20 AM" />
+    //     <ChatItem isMe={true} message="Oh oke" date="4.20 AM" />
+    //   </ScrollView>
+    //   <InputChat />
+    // </ImageBackground>
+  );
+};
+
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  profile: state.profile,
+  chat: state.chat,
+});
+export default connect(mapStateToProps)(Chat);
+
+const styles = StyleSheet.create({
+  date: {
+    textAlign: 'center',
+    marginVertical: 10,
+    fontSize: 14,
+    color: 'white',
+  },
+  container: {
+    flex: 1,
+    backgroundColor: 'black',
+  },
+});
+
+// import React, {useState, useCallback, useEffect} from 'react';
+// import {GiftedChat} from 'react-native-gifted-chat';
+// import HeaderChat from '../components/atoms/HeaderChat';
+// import {connect} from 'react-redux';
+
+// const Example = ({navigation, profile, route}) => {
+//   const [name, setName] = useState('');
+//   const [messages, setMessages] = useState([]);
+
+//   const getContact = async () => {
+//     const data = profile.data;
+//     const getData = data.filter((val) => {
+//       return val.idFriend === route.params.id;
+//     });
+
+//     // await console.log(getData[0]);
+//     await setName(data);
+//     // if (getData[0] !== undefined) {
+//     //   // return console.log(getData[0]);
+//     //   return console.log(name);
+//     // }
+//     // return console.log('no');
+//   };
+//   useEffect(() => {
+//     getContact();
+//     setMessages([
+//       {
+//         _id: 1,
+//         text: 'Hello developer',
+//         createdAt: new Date(),
+//         user: {
+//           _id: 2,
+//           name: 'React Native',
+//           avatar: 'https://placeimg.com/140/140/any',
+//         },
+//         sent: true,
+//       },
+//     ]);
+//     // eslint-disable-next-line react-hooks/exhaustive-deps
+//   }, []);
+
+//   const onSend = useCallback((val = []) => {
+//     // val[0].sent = true;
+//     val[0].received = true;
+//     // (val[0].image = 'https://facebook.github.io/react/img/logo_og.png'),
+//     // val[0].pending = true;
+//     // console.log(val);
+//     setMessages((previousMessages) => GiftedChat.append(previousMessages, val));
+//   }, []);
+
+//   return (
+//     <>
+//       <HeaderChat
+//         name={name.friendName}
+//         image={name.image}
+//         navigation={navigation}
+//       />
+//       <GiftedChat
+//         messages={messages}
+//         onSend={(val) => onSend(val)}
+//         user={{
+//           _id: 1,
+//         }}
+//       />
+//     </>
+//   );
+// };
+
+// const mapStateToProps = (state) => ({
+//   auth: state.auth,
+//   profile: state.profile,
+// });
+// export default connect(mapStateToProps)(Example);
