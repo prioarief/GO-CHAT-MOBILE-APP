@@ -59,11 +59,11 @@ const App = () => {
         component={Chat}
         options={{headerShown: false}}
       />
-      {/* <Stack.Screen
+      <Stack.Screen
         name="Maps"
         component={Maps}
         options={{headerShown: false}}
-      /> */}
+      />
       <Stack.Screen
         name="Profile"
         component={Profile}

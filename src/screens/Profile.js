@@ -6,7 +6,8 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import {HeaderProflie} from '../components/atoms';
 import {connect} from 'react-redux';
 import {API_URL} from '@env';
-import {Logout} from '../redux/actions/auth';
+import {Logout, editProfile} from '../redux/actions/auth';
+import Geolocation from '@react-native-community/geolocation';
 
 const Profile = ({navigation, route, auth, profile, dispatch, chat}) => {
   // const [user, setUser] = useState('');
@@ -71,6 +72,34 @@ const Profile = ({navigation, route, auth, profile, dispatch, chat}) => {
       await dispatch(Logout());
       navigation.replace('Login');
     };
+
+    const getLocation = async () => {
+      await Geolocation.getCurrentPosition(async (info) => {
+        const data = {
+          longitude: info.coords.longitude,
+          latitude: info.coords.latitude,
+        };
+
+        // console.log(data);
+        if (
+          data.longitude !== auth.data.longitude ||
+          data.latitude !== auth.data.latitude
+        ) {
+          return await navigation.navigate('Maps');
+          // return console.log(data.latitude, auth.data.latitude);
+          // return await dispatch(editProfile(auth.data.token, data))
+          //   .then(async (res) => {
+          //     await navigation.navigate('Maps');
+          //     console.log(res);
+          //   })
+
+          //   .catch((err) => {
+          //     console.log(err.response);
+          //   });
+        }
+        return console.log('oke');
+      });
+    };
     if (route.params === undefined) {
       return (
         <>
@@ -92,7 +121,10 @@ const Profile = ({navigation, route, auth, profile, dispatch, chat}) => {
               bottomDivider
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('Maps')}>
+          <TouchableOpacity
+            onPress={async () => {
+              await getLocation();
+            }}>
             <ListItem
               titleStyle={styles.item}
               key={3}

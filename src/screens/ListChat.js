@@ -5,6 +5,10 @@ import {connect} from 'react-redux';
 import {getMyChat} from '../redux/actions/chat';
 import Date from '../utils/date';
 import moment from 'moment';
+import io from 'socket.io-client';
+import {API_URL} from '@env';
+import Geolocation from '@react-native-community/geolocation';
+import {editProfile} from '../redux/actions/auth';
 
 class ListChat extends Component {
   constructor(props) {
@@ -14,6 +18,27 @@ class ListChat extends Component {
       isFriend: false,
     };
   }
+
+  // getLocation = async () => {
+  //   const {dispatch, auth} = this.props;
+  //   await Geolocation.getCurrentPosition(async (info) => {
+  //     const data = {
+  //       longitude: info.coords.longitude,
+  //       latitude: info.coords.latitude,
+  //     };
+
+  //     // console.log(data);
+  //     await dispatch(editProfile(auth.data.token, data))
+  //       .then(async (res) => {
+  //         // await this.setState({location: data});
+  //         console.log(res);
+  //       })
+
+  //       .catch((err) => {
+  //         console.log(err.response);
+  //       });
+  //   });
+  // };
 
   friendCheck = (id) => {
     const data = this.props.profile.data;
@@ -39,7 +64,17 @@ class ListChat extends Component {
   };
 
   componentDidMount() {
+    // this.getLocation();
     this.getLandingScreen();
+    this.socket = io(API_URL);
+    // this.socket.on('chat-list', (res) => {
+    //   this.setState({listChat: [...this.state.listChat, res]});
+    // });
+  }
+
+  componentWillUnmount() {
+    this.socket.removeAllListeners();
+    this.socket.disconnect();
   }
   render() {
     const {navigation} = this.props;
@@ -58,7 +93,9 @@ class ListChat extends Component {
                   time={Date(data.created_at, 'hh:ss a')}
                   image={data.image}
                   status={true}
-                  onPress={() => navigation.navigate('Chat', {id: data.user})}
+                  onPress={() =>
+                    navigation.navigate('Chat', {id: data.receiver})
+                  }
                 />
               );
             })

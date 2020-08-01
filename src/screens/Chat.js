@@ -8,6 +8,8 @@ import {getMessage, getMyChat, sendMessage} from '../redux/actions/chat';
 import {Header, InputChat} from '../components/atoms';
 import {ChatItem} from '../components/molecules';
 import Date from '../utils/date';
+import io from 'socket.io-client';
+import {API_URL} from '@env';
 
 class Chat extends Component {
   constructor(props) {
@@ -26,7 +28,6 @@ class Chat extends Component {
       .then(async (res) => {
         await dispatch(getMyChat(auth.data.token));
         await this.setState({message: this.props.chat.chat});
-        console.log(this.props.chat);
       })
       .catch((err) => {
         console.log(err.response);
@@ -34,6 +35,11 @@ class Chat extends Component {
   };
 
   sendMsg = async () => {
+    // this.socket.emit('chat message', {
+    //   sender: 'Prio',
+    //   receiver: 'Arief',
+    //   msg: this.state.newMessage,
+    // });
     await this.props
       .dispatch(
         sendMessage(
@@ -43,8 +49,8 @@ class Chat extends Component {
         ),
       )
       .then(async (res) => {
-        console.log(res);
-        await this.renderChat();
+        // console.log(res);
+        // await this.renderChat();
         await this.setState({newMessage: ''});
       });
   };
@@ -68,7 +74,16 @@ class Chat extends Component {
   componentDidMount() {
     this.renderChat();
     this.getContact();
+    this.socket = io(API_URL);
+    this.socket.on('chat', (res) => {
+      this.setState({message: [...this.state.message, res]});
+    });
   }
+  componentWillUnmount() {
+    this.socket.removeAllListeners();
+    this.socket.disconnect();
+  }
+
   render() {
     const {data} = this.props.auth;
     const {name, message, newMessage} = this.state;
@@ -83,7 +98,6 @@ class Chat extends Component {
         <ScrollView showsHorizontalScrollIndicator={false}>
           <Text style={styles.date}>27 July 2020</Text>
           {message.map((msg) => {
-            console.log(msg);
             return (
               <ChatItem
                 key={msg._id}

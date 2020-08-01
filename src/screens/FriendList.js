@@ -20,11 +20,11 @@ class Friends extends Component {
         await this.setState({contact: this.props.profile.data});
         console.log(this.state.contact.length);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err.response));
   };
-  componentDidMount() {
-    this.getFriendList();
-  }
+  componentDidMount = async () => {
+    await this.getFriendList();
+  };
   render() {
     const {navigation} = this.props;
     return (
