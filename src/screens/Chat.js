@@ -76,7 +76,10 @@ class Chat extends Component {
     this.getContact();
     this.socket = io(API_URL);
     this.socket.on('chat', (res) => {
-      this.setState({message: [...this.state.message, res]});
+      const {id} = this.props.route.params;
+      if (res.receiver === id || res.user === id) {
+        return this.setState({message: [...this.state.message, res]});
+      }
     });
   }
   componentWillUnmount() {
@@ -95,7 +98,12 @@ class Chat extends Component {
           image={name.friendImage || name.image}
           id={this.props.route.params.id}
         />
-        <ScrollView showsHorizontalScrollIndicator={false}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          ref={(scroll) => {
+            this.scroll = scroll;
+          }}
+          onContentSizeChange={() => this.scroll.scrollToEnd()}>
           <Text style={styles.date}>27 July 2020</Text>
           {message.map((msg) => {
             return (

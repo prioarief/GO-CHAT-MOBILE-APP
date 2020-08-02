@@ -18,7 +18,6 @@ class Friends extends Component {
       .dispatch(getContact(this.props.auth.data.token))
       .then(async (res) => {
         await this.setState({contact: this.props.profile.data});
-        console.log(this.state.contact.length);
       })
       .catch((err) => console.log(err.response));
   };

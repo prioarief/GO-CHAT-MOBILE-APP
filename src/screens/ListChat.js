@@ -67,9 +67,10 @@ class ListChat extends Component {
     // this.getLocation();
     this.getLandingScreen();
     this.socket = io(API_URL);
-    // this.socket.on('chat-list', (res) => {
-    //   this.setState({listChat: [...this.state.listChat, res]});
-    // });
+    this.socket.on('chat-list', (res) => {
+      // console.log(res);
+      // this.setState({listChat: res});
+    });
   }
 
   componentWillUnmount() {
@@ -77,13 +78,13 @@ class ListChat extends Component {
     this.socket.disconnect();
   }
   render() {
-    const {navigation} = this.props;
+    const {navigation, auth} = this.props;
     return (
       <View style={styles.content}>
         <ScrollView>
           {this.state.listChat !== 'Data not found' ? (
             this.state.listChat.map((data) => {
-              // this.friendCheck(data.id);
+              console.log(data);
               return (
                 <ChatList
                   key={data._id}
@@ -94,7 +95,12 @@ class ListChat extends Component {
                   image={data.image}
                   status={true}
                   onPress={() =>
-                    navigation.navigate('Chat', {id: data.receiver})
+                    navigation.navigate('Chat', {
+                      id:
+                        data.receiver === auth.data.id
+                          ? data.user
+                          : data.receiver,
+                    })
                   }
                 />
               );
