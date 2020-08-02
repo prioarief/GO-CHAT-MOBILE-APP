@@ -21,9 +21,9 @@ class Friends extends Component {
       })
       .catch((err) => console.log(err.response));
   };
-  componentDidMount = async () => {
+  async componentDidMount() {
     await this.getFriendList();
-  };
+  }
   render() {
     const {navigation} = this.props;
     return (

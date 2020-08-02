@@ -22,6 +22,7 @@ const auth = (state = inialState, action) => {
       return {
         ...state,
         isLoading: false,
+        errorMessage: null,
         data: action.payload.data.data[0],
       };
     }

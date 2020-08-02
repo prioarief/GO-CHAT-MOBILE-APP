@@ -36,24 +36,13 @@ class Chat extends Component {
   };
 
   sendMsg = async () => {
-    // this.socket.emit('chat message', {
-    //   sender: 'Prio',
-    //   receiver: 'Arief',
-    //   msg: this.state.newMessage,
-    // });
-    await this.props
-      .dispatch(
-        sendMessage(
-          this.props.auth.data.token,
-          this.props.route.params.id,
-          this.state.newMessage,
-        ),
-      )
-      .then(async (res) => {
-        // console.log(res);
-        // await this.renderChat();
-        await this.setState({newMessage: ''});
-      });
+    const {dispatch, chat, auth, route} = this.props;
+    await dispatch(
+      sendMessage(auth.data.token, route.params.id, this.state.newMessage),
+    ).then(async (res) => {
+      await dispatch(getMyChat(auth.data.token));
+      await this.setState({newMessage: ''});
+    });
   };
 
   getContact = async () => {

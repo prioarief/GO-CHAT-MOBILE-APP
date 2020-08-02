@@ -14,32 +14,10 @@ class ListChat extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      listChat: this.props.chat.data || null,
+      book: 'Data not found',
       isFriend: false,
     };
   }
-
-  // getLocation = async () => {
-  //   const {dispatch, auth} = this.props;
-  //   await Geolocation.getCurrentPosition(async (info) => {
-  //     const data = {
-  //       longitude: info.coords.longitude,
-  //       latitude: info.coords.latitude,
-  //     };
-
-  //     // console.log(data);
-  //     await dispatch(editProfile(auth.data.token, data))
-  //       .then(async (res) => {
-  //         // await this.setState({location: data});
-  //         console.log(res);
-  //       })
-
-  //       .catch((err) => {
-  //         console.log(err.response);
-  //       });
-  //   });
-  // };
-
   friendCheck = (id) => {
     const data = this.props.profile.data;
     const getData = data.filter((val) => {
@@ -56,56 +34,47 @@ class ListChat extends Component {
     const {auth, dispatch, chat} = this.props;
     await dispatch(getMyChat(auth.data.token))
       .then(async (res) => {
-        await this.setState({listChat: chat.data});
+        this.setState({listChat: res.value.data.data});
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  componentDidMount() {
-    // this.getLocation();
-    this.getLandingScreen();
-    this.socket = io(API_URL);
-    this.socket.on('chat-list', (res) => {
-      // console.log(res);
-      // this.setState({listChat: res});
-    });
-  }
+  componentDidMount = async () => {
+    await this.getLandingScreen();
+  };
 
-  componentWillUnmount() {
-    this.socket.removeAllListeners();
-    this.socket.disconnect();
-  }
   render() {
-    const {navigation, auth} = this.props;
     return (
       <View style={styles.content}>
         <ScrollView>
           {this.state.listChat !== 'Data not found' ? (
-            this.state.listChat.map((data) => {
-              return (
-                <ChatList
-                  key={data._id}
-                  navigation={navigation}
-                  name={data.name}
-                  message={data.message}
-                  time={Date(data.created_at, 'hh:ss a')}
-                  image={data.image}
-                  status={true}
-                  onPress={() =>
-                    navigation.navigate('Chat', {
-                      id:
-                        data.receiver === auth.data.id
-                          ? data.user
-                          : data.receiver,
-                    })
-                  }
-                />
-              );
-            })
+            this.state.listChat ? (
+              this.state.listChat.map((data) => {
+                return (
+                  <ChatList
+                    key={data._id}
+                    navigation={this.props.navigation}
+                    name={data.name}
+                    message={data.message}
+                    time={Date(data.created_at, 'hh:ss a')}
+                    image={data.image}
+                    status={true}
+                    onPress={() =>
+                      this.props.navigation.navigate('Chat', {
+                        id:
+                          data.receiver === this.props.auth.data.id
+                            ? data.user
+                            : data.receiver,
+                      })
+                    }
+                  />
+                );
+              })
+            ) : null
           ) : (
-            <Text>Not Found</Text>
+            <Text style={styles.notfound}>Not Found</Text>
           )}
           {/* <ChatList
             name="Prio Arief Gunawan"
