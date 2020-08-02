@@ -63,7 +63,10 @@ class Chat extends Component {
       return val.idFriend === this.props.route.params.id;
     });
     const getChatData = ChatData.filter((val) => {
-      return val.user === this.props.route.params.id;
+      return (
+        val.user === this.props.route.params.id ||
+        val.receiver === this.props.route.params.id
+      );
     });
 
     if (getData[0] !== undefined) {
@@ -73,11 +76,6 @@ class Chat extends Component {
   };
 
   componentDidMount() {
-    // this.setState({isLoading: true});
-    // setTimeout(() => {
-    //   this.setState({isLoading: false});
-    // }, 400);
-
     this.renderChat();
     this.getContact();
     // console.log(this.state.isLoading);

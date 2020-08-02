@@ -61,5 +61,5 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps)(Friends);
 
 const styles = StyleSheet.create({
-  content: {flex: 1, backgroundColor: 'black'},
+  content: {flex: 1, backgroundColor: '#212121'},
 });

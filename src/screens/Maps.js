@@ -188,6 +188,7 @@ class Maps extends Component {
             return (
               data.longitude !== null && (
                 <Marker
+                  key={data.id}
                   draggable
                   coordinate={{
                     longitude: data.longitude,

@@ -8,6 +8,7 @@ import FriendList from './FriendList';
 import EditProfile from './EditProfile';
 import Gifted from './Gifted';
 import Maps from './Maps';
+import Splash from './Splash';
 
 export {
   Login,
@@ -20,4 +21,5 @@ export {
   EditProfile,
   Gifted,
   Maps,
+  Splash,
 };

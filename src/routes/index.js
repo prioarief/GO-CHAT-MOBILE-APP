@@ -13,6 +13,7 @@ import {
   Register,
   Gifted,
   Maps,
+  Splash,
 } from '../screens';
 
 const Stack = createStackNavigator();
@@ -38,7 +39,7 @@ const MainApp = () => {
 };
 const App = () => {
   return (
-    <Stack.Navigator initialRouteName="Login">
+    <Stack.Navigator initialRouteName="Splash">
       <Stack.Screen
         name="Login"
         component={Login}
@@ -47,6 +48,11 @@ const App = () => {
       <Stack.Screen
         name="Register"
         component={Register}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Splash"
+        component={Splash}
         options={{headerShown: false}}
       />
       <Stack.Screen

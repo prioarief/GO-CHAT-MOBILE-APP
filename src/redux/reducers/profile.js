@@ -41,7 +41,7 @@ const profile = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
-        data: action.payload.data.data,
+        // data: action.payload.data.data,
       };
     }
 

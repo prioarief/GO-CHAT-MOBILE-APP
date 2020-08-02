@@ -84,7 +84,6 @@ class ListChat extends Component {
         <ScrollView>
           {this.state.listChat !== 'Data not found' ? (
             this.state.listChat.map((data) => {
-              console.log(data);
               return (
                 <ChatList
                   key={data._id}
@@ -129,5 +128,5 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps)(ListChat);
 
 const styles = StyleSheet.create({
-  content: {flex: 1, backgroundColor: 'black'},
+  content: {flex: 1, backgroundColor: '#212121'},
 });

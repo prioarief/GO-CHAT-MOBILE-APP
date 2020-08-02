@@ -19,8 +19,8 @@ const HeaderProfile = ({
     // console.log(id);
     await dispatch(add(auth.data.token, id))
       .then(async () => {
-        await dispatch(getContact(auth.data.token)).then(async () =>
-          navigation.navigate('MainApp'),
+        await dispatch(getContact(auth.data.token)).then(
+          async () => await navigation.navigate('MainApp'),
         );
       })
       .catch((err) => console.log(err.response));

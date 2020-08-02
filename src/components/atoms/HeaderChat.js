@@ -16,6 +16,7 @@ const HeaderChat = ({navigation, name, image, id, auth}) => {
   };
 
   useEffect(() => {
+    console.log(image);
     setTimeout(() => {
       setStatus(true);
     }, 500);

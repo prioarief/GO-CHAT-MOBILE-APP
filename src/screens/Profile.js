@@ -33,11 +33,14 @@ const Profile = ({navigation, route, auth, profile, dispatch, chat}) => {
     let user = {};
     const data = profile.data;
     const ChatData = chat.data;
+    console.log(data, ChatData);
     const getData = data.filter((val) => {
       return val.idFriend === route.params.isMe;
     });
     const getChatData = ChatData.filter((val) => {
-      return val.user === route.params.isMe;
+      return (
+        val.user === route.params.isMe || val.receiver === route.params.isMe
+      );
     });
 
     if (getData[0] !== undefined) {
@@ -47,7 +50,6 @@ const Profile = ({navigation, route, auth, profile, dispatch, chat}) => {
       user = getChatData[0];
       isFriend = false;
     }
-    console.log(user);
 
     return (
       <>
@@ -55,7 +57,11 @@ const Profile = ({navigation, route, auth, profile, dispatch, chat}) => {
           navigation={navigation}
           name={user.friendName || user.name}
           isFriend={isFriend}
-          id={user.idFriend || user.user}
+          id={
+            user.idFriend || user.user === auth.data.id
+              ? user.receiver
+              : user.user
+          }
           image={
             user.friendImage === null
               ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcShi2vPDOkXvjMhrDuNwsxqh5RB0d1f1ZADVw&usqp=CAU'
@@ -85,17 +91,16 @@ const Profile = ({navigation, route, auth, profile, dispatch, chat}) => {
           data.longitude !== auth.data.longitude ||
           data.latitude !== auth.data.latitude
         ) {
-          return await navigation.navigate('Maps');
+          // return await navigation.navigate('Maps');
           // return console.log(data.latitude, auth.data.latitude);
-          // return await dispatch(editProfile(auth.data.token, data))
-          //   .then(async (res) => {
-          //     await navigation.navigate('Maps');
-          //     console.log(res);
-          //   })
+          return await dispatch(editProfile(auth.data.token, data))
+            .then(async (res) => {
+              await navigation.navigate('Maps');
+            })
 
-          //   .catch((err) => {
-          //     console.log(err.response);
-          //   });
+            .catch((err) => {
+              console.log(err.response);
+            });
         }
         return console.log('oke');
       });
