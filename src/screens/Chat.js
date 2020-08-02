@@ -6,7 +6,7 @@ import {Background} from '../assets';
 import {connect} from 'react-redux';
 import {getMessage, getMyChat, sendMessage} from '../redux/actions/chat';
 import {Header, InputChat} from '../components/atoms';
-import {ChatItem} from '../components/molecules';
+import {ChatItem, Loading} from '../components/molecules';
 import Date from '../utils/date';
 import io from 'socket.io-client';
 import {API_URL} from '@env';
@@ -18,6 +18,7 @@ class Chat extends Component {
       name: '',
       message: [],
       newMessage: '',
+      isLoading: this.props.chat.isLoading,
     };
   }
 
@@ -72,8 +73,14 @@ class Chat extends Component {
   };
 
   componentDidMount() {
+    // this.setState({isLoading: true});
+    // setTimeout(() => {
+    //   this.setState({isLoading: false});
+    // }, 400);
+
     this.renderChat();
     this.getContact();
+    // console.log(this.state.isLoading);
     this.socket = io(API_URL);
     this.socket.on('chat', (res) => {
       const {id} = this.props.route.params;
@@ -82,6 +89,10 @@ class Chat extends Component {
       }
     });
   }
+
+  // componentDidUpdate() {
+  //   console.log(this.props.chat.isLoading);
+  // }
   componentWillUnmount() {
     this.socket.removeAllListeners();
     this.socket.disconnect();
@@ -91,37 +102,40 @@ class Chat extends Component {
     const {data} = this.props.auth;
     const {name, message, newMessage} = this.state;
     return (
-      <ImageBackground source={Background} style={styles.container}>
-        <Header
-          navigation={this.props.navigation}
-          name={name.friendName || name.name}
-          image={name.friendImage || name.image}
-          id={this.props.route.params.id}
-        />
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          ref={(scroll) => {
-            this.scroll = scroll;
-          }}
-          onContentSizeChange={() => this.scroll.scrollToEnd()}>
-          <Text style={styles.date}>27 July 2020</Text>
-          {message.map((msg) => {
-            return (
-              <ChatItem
-                key={msg._id}
-                isMe={msg.user === data.id ? true : false}
-                message={msg.message}
-                date={Date(msg.created_at, 'hh:ss a')}
-              />
-            );
-          })}
-        </ScrollView>
-        <InputChat
-          value={newMessage}
-          onChangeText={(input) => this.setState({newMessage: input})}
-          onPress={() => this.sendMsg()}
-        />
-      </ImageBackground>
+      <>
+        <ImageBackground source={Background} style={styles.container}>
+          <Header
+            navigation={this.props.navigation}
+            name={name.friendName || name.name}
+            image={name.friendImage || name.image}
+            id={this.props.route.params.id}
+          />
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            ref={(scroll) => {
+              this.scroll = scroll;
+            }}
+            onContentSizeChange={() => this.scroll.scrollToEnd()}>
+            <Text style={styles.date}>27 July 2020</Text>
+            {message.map((msg) => {
+              return (
+                <ChatItem
+                  key={msg._id}
+                  isMe={msg.user === data.id ? true : false}
+                  message={msg.message}
+                  date={Date(msg.created_at, 'hh:ss a')}
+                />
+              );
+            })}
+          </ScrollView>
+          <InputChat
+            value={newMessage}
+            onChangeText={(input) => this.setState({newMessage: input})}
+            onPress={() => this.sendMsg()}
+          />
+        </ImageBackground>
+        {this.props.chat.isLoading && <Loading />}
+      </>
       // <>
       //   <Header
       //     name={name.friendName || name.name}
