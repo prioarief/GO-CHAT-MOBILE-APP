@@ -14,7 +14,7 @@ class Splash extends Component {
         return this.props.navigation.replace('MainApp');
       }
       this.props.navigation.replace('Login');
-    }, 2000);
+    }, 1500);
   }
   render() {
     return (

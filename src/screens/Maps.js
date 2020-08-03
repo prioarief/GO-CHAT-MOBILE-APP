@@ -104,10 +104,6 @@ class Maps extends Component {
     };
   }
 
-  // getFriendLocation = async () => {
-  //   const {auth, dispatch, profile} = this.props;
-  // };
-
   requestGpsPermission = async () => {
     try {
       const granted = await PermissionsAndroid.request(
@@ -121,7 +117,7 @@ class Maps extends Component {
       );
 
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('oke');
+        // console.log('oke');
       } else {
         ToastAndroid.show('Lokasi tidak dijinkan', ToastAndroid.SHORT);
       }
@@ -130,50 +126,10 @@ class Maps extends Component {
     }
   };
 
-  // getLocation = async () => {
-  //   const {dispatch, auth} = this.props;
-  //   await Geolocation.getCurrentPosition(async (info) => {
-  //     const data = {
-  //       longitude: info.coords.longitude,
-  //       latitude: info.coords.latitude,
-  //     };
-
-  //     // console.log(data);
-  //     await dispatch(editProfile(auth.data.token, data))
-  //       .then(async (res) => {
-  //         await this.setState({location: data});
-  //         // console.log(this.state.location);
-  //       })
-
-  //       .catch((err) => {
-  //         console.log(err.response);
-  //       });
-  //   });
-  // };
   watchID = null;
 
   async componentDidMount() {
     await this.requestGpsPermission();
-    // console.log(this.props.friendId, this.props.profile.data);
-
-    // this.getFriendLocation();
-    // Geolocation.getCurrentPosition(
-    //   (position) => {
-    //     const initialPosition = JSON.stringify(position);
-    //     this.setState({initialPosition});
-    //   },
-    //   (error) => Alert.alert('Error', JSON.stringify(error)),
-    //   {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
-    // );
-    // this.watchID = Geolocation.watchPosition((position) => {
-    //   const lastPosition = JSON.stringify(position);
-    //   this.setState({lastPosition});
-    // });
-    // console.log(
-    //   this.watchID,
-    //   this.state.initialPosition,
-    //   this.state.lastPosition,
-    // );
   }
 
   componentWillUnmount() {

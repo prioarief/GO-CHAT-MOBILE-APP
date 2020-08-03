@@ -46,9 +46,11 @@ const Profile = ({navigation, route, auth, profile, dispatch, chat}) => {
     if (getData[0] !== undefined) {
       user = getData[0];
       isFriend = true;
+      console.log(getData, 'friend');
     } else {
       user = getChatData[0];
       isFriend = false;
+      console.log(getChatData);
     }
 
     return (
@@ -62,6 +64,7 @@ const Profile = ({navigation, route, auth, profile, dispatch, chat}) => {
               ? user.receiver
               : user.user
           }
+          // id={user.idFriend}
           image={
             user.friendImage === null
               ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcShi2vPDOkXvjMhrDuNwsxqh5RB0d1f1ZADVw&usqp=CAU'

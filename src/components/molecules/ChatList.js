@@ -1,9 +1,8 @@
+import {API_URL} from '@env';
 import React from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {ListItem} from 'react-native-elements';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {Checked, CheckedActive} from '../../assets';
-import {API_URL} from '@env';
 
 const ChatList = ({
   name,

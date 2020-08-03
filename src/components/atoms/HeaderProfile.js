@@ -41,8 +41,8 @@ const HeaderProfile = ({
         {!isFriend && (
           <Button
             title="Add Contact"
-            buttonStyle={{backgroundColor: 'orange'}}
-            containerStyle={{paddingVertical: 10}}
+            buttonStyle={styles.button}
+            containerStyle={styles.ButtonContainer}
             onPress={() => addContact()}
           />
         )}
@@ -83,4 +83,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     textAlign: 'center',
   },
+  button: {backgroundColor: 'orange'},
+  ButtonContainer: {paddingVertical: 10},
 });

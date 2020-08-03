@@ -11,7 +11,6 @@ import {
   Login,
   Profile,
   Register,
-  Gifted,
   Maps,
   Splash,
 } from '../screens';
