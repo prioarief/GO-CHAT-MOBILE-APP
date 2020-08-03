@@ -83,7 +83,7 @@ class Search extends Component {
   };
 
   render() {
-    const {keyword, result, isLoading, visible} = this.state;
+    const {keyword, result, isLoading} = this.state;
     return (
       <>
         <View style={styles.container}>
