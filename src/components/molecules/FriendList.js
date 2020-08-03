@@ -2,14 +2,15 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {ListItem} from 'react-native-elements';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {Divider} from '../atoms';
 
-const ChatList = ({name, onPress, onLongPress, image}) => {
+const ChatList = ({name, onPress, onLongPress, image, light}) => {
   return (
     <View>
       <TouchableOpacity onLongPress={onLongPress} onPress={onPress}>
         <ListItem
-          containerStyle={styles.list}
-          titleStyle={styles.item}
+          containerStyle={styles.list(light)}
+          titleStyle={styles.item(light)}
           subtitleStyle={styles.message}
           leftAvatar={{
             source: {
@@ -17,9 +18,9 @@ const ChatList = ({name, onPress, onLongPress, image}) => {
             },
           }}
           title={name}
-          bottomDivider
           chevron
         />
+        <Divider />
       </TouchableOpacity>
     </View>
   );
@@ -28,12 +29,12 @@ const ChatList = ({name, onPress, onLongPress, image}) => {
 export default ChatList;
 
 const styles = StyleSheet.create({
-  list: {
-    backgroundColor: '#212121',
-  },
-  item: {
-    color: '#f0f0f0',
-  },
+  list: (light) => ({
+    backgroundColor: light ? 'white' : '#212121',
+  }),
+  item: (light) => ({
+    color: light ? 'black' : '#f0f0f0',
+  }),
   message: {
     color: '#cfcfcf',
   },

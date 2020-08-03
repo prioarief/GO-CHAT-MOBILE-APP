@@ -9,6 +9,7 @@ import EditProfile from './EditProfile';
 import Gifted from './Gifted';
 import Maps from './Maps';
 import Splash from './Splash';
+import Search from './Search';
 
 export {
   Login,
@@ -22,4 +23,5 @@ export {
   Gifted,
   Maps,
   Splash,
+  Search,
 };

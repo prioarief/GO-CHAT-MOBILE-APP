@@ -3,6 +3,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {ListItem} from 'react-native-elements';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {Divider} from '../atoms';
 
 const ChatList = ({
   name,
@@ -33,8 +34,8 @@ const ChatList = ({
           rightSubtitle={time}
           // rightTitle={<Image source={status ? CheckedActive : Checked} />}
           rightSubtitleStyle={styles.time}
-          bottomDivider
         />
+        <Divider />
       </TouchableOpacity>
     </View>
   );

@@ -1,17 +1,28 @@
-import React, {Component} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
-import {FriendList} from '../components/molecules';
-import {connect} from 'react-redux';
-import {getContact} from '../redux/actions/profile';
 import {API_URL} from '@env';
+import React, {Component} from 'react';
+import {RefreshControl, ScrollView, StyleSheet, View} from 'react-native';
+import {Button} from 'react-native-elements';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import {connect} from 'react-redux';
+import {FriendList} from '../components/molecules';
+import {getContact} from '../redux/actions/profile';
 
 class Friends extends Component {
   constructor(props) {
     super(props);
     this.state = {
       contact: [],
+      refresh: false,
+      visible: false,
     };
   }
+
+  onRefresh = () => {
+    this.setState({refresh: true});
+    setTimeout(() => {
+      this.setState({refresh: false});
+    }, 200);
+  };
 
   getFriendList = async () => {
     await this.props
@@ -28,8 +39,14 @@ class Friends extends Component {
     const {navigation} = this.props;
     return (
       <View style={styles.content}>
-        <ScrollView>
-          {this.state.contact.map((data) => {
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refresh}
+              onRefresh={this.onRefresh}
+            />
+          }>
+          {this.props.profile.data.map((data) => {
             // console.log(data);
             return (
               <FriendList
@@ -50,6 +67,14 @@ class Friends extends Component {
             );
           })}
         </ScrollView>
+        <View style={styles.BtnContainer}>
+          <Button
+            containerStyle={{borderRadius: 70 / 2}}
+            buttonStyle={styles.btn}
+            icon={<Icon name="folder-plus" color="white" size={24} />}
+            onPress={() => navigation.navigate('Search Contact')}
+          />
+        </View>
       </View>
     );
   }
@@ -62,4 +87,11 @@ export default connect(mapStateToProps)(Friends);
 
 const styles = StyleSheet.create({
   content: {flex: 1, backgroundColor: '#212121'},
+  btn: {height: 70, width: 70},
+  BtnContainer: {
+    position: 'absolute',
+    top: 400,
+    right: 50,
+    height: 60,
+  },
 });
