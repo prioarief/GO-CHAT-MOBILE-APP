@@ -48,7 +48,7 @@ const chat = (state = initialState, action) => {
     case 'SEND_PENDING': {
       return {
         ...state,
-        isLoading: true,
+        // isLoading: true,
       };
     }
     case 'SEND_REJECTED': {

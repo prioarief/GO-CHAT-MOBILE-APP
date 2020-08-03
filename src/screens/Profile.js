@@ -1,13 +1,14 @@
-import React, {useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {API_URL} from '@env';
+import Geolocation from '@react-native-community/geolocation';
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
 import {ListItem} from 'react-native-elements';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {HeaderProflie} from '../components/atoms';
 import {connect} from 'react-redux';
-import {API_URL} from '@env';
-import {Logout, editProfile} from '../redux/actions/auth';
-import Geolocation from '@react-native-community/geolocation';
+import {HeaderProflie} from '../components/atoms';
+import {editProfile, Logout} from '../redux/actions/auth';
+import Maps from './Maps';
 
 const Profile = ({navigation, route, auth, profile, dispatch, chat}) => {
   // const [user, setUser] = useState('');
@@ -33,7 +34,6 @@ const Profile = ({navigation, route, auth, profile, dispatch, chat}) => {
     let user = {};
     const data = profile.data;
     const ChatData = chat.data;
-    console.log(data, ChatData);
     const getData = data.filter((val) => {
       return val.idFriend === route.params.isMe;
     });
@@ -95,7 +95,7 @@ const Profile = ({navigation, route, auth, profile, dispatch, chat}) => {
           // return console.log(data.latitude, auth.data.latitude);
           return await dispatch(editProfile(auth.data.token, data))
             .then(async (res) => {
-              await navigation.navigate('Maps');
+              await navigation.navigate('Maps', {isMe: true});
             })
 
             .catch((err) => {
@@ -150,7 +150,7 @@ const Profile = ({navigation, route, auth, profile, dispatch, chat}) => {
         </>
       );
     }
-    return <Text>Oke</Text>;
+    return <Maps friendId={route.params.isMe} />;
   };
   return (
     <View>

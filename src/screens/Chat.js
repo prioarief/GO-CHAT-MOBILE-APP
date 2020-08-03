@@ -1,15 +1,14 @@
+import {API_URL} from '@env';
 import React, {Component} from 'react';
-import {Text, StyleSheet, View, ImageBackground} from 'react-native';
-import {GiftedChat, Bubble} from 'react-native-gifted-chat';
+import {ImageBackground, StyleSheet, Text} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
-import {Background} from '../assets';
 import {connect} from 'react-redux';
-import {getMessage, getMyChat, sendMessage} from '../redux/actions/chat';
+import io from 'socket.io-client';
+import {Background} from '../assets';
 import {Header, InputChat} from '../components/atoms';
 import {ChatItem, Loading} from '../components/molecules';
+import {getMessage, getMyChat, sendMessage} from '../redux/actions/chat';
 import Date from '../utils/date';
-import io from 'socket.io-client';
-import {API_URL} from '@env';
 
 class Chat extends Component {
   constructor(props) {
@@ -36,11 +35,11 @@ class Chat extends Component {
   };
 
   sendMsg = async () => {
-    const {dispatch, chat, auth, route} = this.props;
+    const {dispatch, auth, route} = this.props;
     await dispatch(
       sendMessage(auth.data.token, route.params.id, this.state.newMessage),
     ).then(async (res) => {
-      await dispatch(getMyChat(auth.data.token));
+      // await dispatch(getMyChat(auth.data.token));
       await this.setState({newMessage: ''});
     });
   };

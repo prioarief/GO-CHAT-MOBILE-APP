@@ -1,14 +1,9 @@
 import React, {Component} from 'react';
-import {ScrollView, StyleSheet, View, Text} from 'react-native';
-import {ChatList} from '../components/molecules';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {connect} from 'react-redux';
+import {ChatList} from '../components/molecules';
 import {getMyChat} from '../redux/actions/chat';
 import Date from '../utils/date';
-import moment from 'moment';
-import io from 'socket.io-client';
-import {API_URL} from '@env';
-import Geolocation from '@react-native-community/geolocation';
-import {editProfile} from '../redux/actions/auth';
 
 class ListChat extends Component {
   constructor(props) {
@@ -31,7 +26,7 @@ class ListChat extends Component {
   };
 
   getLandingScreen = async () => {
-    const {auth, dispatch, chat} = this.props;
+    const {auth, dispatch} = this.props;
     await dispatch(getMyChat(auth.data.token))
       .then(async (res) => {
         this.setState({listChat: res.value.data.data});

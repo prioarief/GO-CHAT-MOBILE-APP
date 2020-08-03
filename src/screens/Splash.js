@@ -1,14 +1,11 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Image, Text} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {connect} from 'react-redux';
-import {Logo, LogoWhite} from '../assets';
+import {Logo} from '../assets';
 
 class Splash extends Component {
   constructor(props) {
     super(props);
-    // this.state = {
-    //   getStarted: null,
-    // };
   }
 
   componentDidMount() {
@@ -22,11 +19,9 @@ class Splash extends Component {
   render() {
     return (
       <View style={styles.logo}>
-        <Image source={Logo} style={{width: 200, height: 200}} />
-        <Text style={{fontSize: 40, color: 'black'}}>Go Chat</Text>
-        <Text style={{fontSize: 16, color: 'black'}}>
-          Connect with your friends
-        </Text>
+        <Logo />
+        <Text style={styles.title}>Go Chat</Text>
+        <Text style={styles.tagline}>Connect with your friends</Text>
       </View>
     );
   }
@@ -45,4 +40,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  title: {fontSize: 30, color: 'black'},
+  tagline: {fontSize: 16, color: 'black'},
 });

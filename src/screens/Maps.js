@@ -80,15 +80,18 @@
 //     right: 0,
 //   },
 // });
-import React, {Component} from 'react';
-import {Text, StyleSheet, View, Image, Alert} from 'react-native';
-import MapView, {Marker} from 'react-native-maps';
-import {connect} from 'react-redux';
-import GeoLocqtion from '@react-native-community/geolocation';
 import {API_URL} from '@env';
 import Geolocation from '@react-native-community/geolocation';
-import {editProfile} from '../redux/actions/auth';
-import {getContact} from '../redux/actions/profile';
+import React, {Component} from 'react';
+import {
+  Image,
+  PermissionsAndroid,
+  StyleSheet,
+  ToastAndroid,
+  View,
+} from 'react-native';
+import MapView, {Marker} from 'react-native-maps';
+import {connect} from 'react-redux';
 
 class Maps extends Component {
   constructor(props) {
@@ -101,9 +104,30 @@ class Maps extends Component {
     };
   }
 
-  getFriendLocation = async () => {
-    const {auth, dispatch, profile} = this.props;
-    console.log(profile.data);
+  // getFriendLocation = async () => {
+  //   const {auth, dispatch, profile} = this.props;
+  // };
+
+  requestGpsPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'Akses lokasi diperlukan',
+          message: 'Aktifkan gps kamu sebelum lokasi dibagikan',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('oke');
+      } else {
+        ToastAndroid.show('Lokasi tidak dijinkan', ToastAndroid.SHORT);
+      }
+    } catch (error) {
+      ToastAndroid.show('Terjadi gangguan, coba lagi', ToastAndroid.SHORT);
+    }
   };
 
   // getLocation = async () => {
@@ -128,20 +152,23 @@ class Maps extends Component {
   // };
   watchID = null;
 
-  componentDidMount() {
-    this.getFriendLocation();
-    Geolocation.getCurrentPosition(
-      (position) => {
-        const initialPosition = JSON.stringify(position);
-        this.setState({initialPosition});
-      },
-      (error) => Alert.alert('Error', JSON.stringify(error)),
-      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
-    );
-    this.watchID = Geolocation.watchPosition((position) => {
-      const lastPosition = JSON.stringify(position);
-      this.setState({lastPosition});
-    });
+  async componentDidMount() {
+    await this.requestGpsPermission();
+    // console.log(this.props.friendId, this.props.profile.data);
+
+    // this.getFriendLocation();
+    // Geolocation.getCurrentPosition(
+    //   (position) => {
+    //     const initialPosition = JSON.stringify(position);
+    //     this.setState({initialPosition});
+    //   },
+    //   (error) => Alert.alert('Error', JSON.stringify(error)),
+    //   {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
+    // );
+    // this.watchID = Geolocation.watchPosition((position) => {
+    //   const lastPosition = JSON.stringify(position);
+    //   this.setState({lastPosition});
+    // });
     // console.log(
     //   this.watchID,
     //   this.state.initialPosition,
@@ -154,14 +181,12 @@ class Maps extends Component {
   }
 
   render() {
-    const {auth, route} = this.props;
-    // console.log(auth.data.latitude, 'lat');
-    // console.log(auth.data.longitude, 'long');
+    const {auth, friendId} = this.props;
+
     return (
-      <View style={styles.view}>
-        <Text>Map</Text>
+      <View style={friendId ? null : styles.view}>
         <MapView
-          style={styles.map}
+          style={friendId ? styles.friend_map : styles.map}
           showsTraffic={true}
           showsCompass={true}
           initialRegion={{
@@ -180,7 +205,7 @@ class Maps extends Component {
             description={auth.data.username}>
             <Image
               source={{uri: `${API_URL}/images/${auth.data.image}`}}
-              style={{height: 50, width: 50, borderRadius: 50 / 2}}
+              style={styles.marker}
             />
           </Marker>
 
@@ -203,7 +228,7 @@ class Maps extends Component {
                           ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcShi2vPDOkXvjMhrDuNwsxqh5RB0d1f1ZADVw&usqp=CAU'
                           : `${API_URL}/images/${data.friendImage}`,
                     }}
-                    style={{height: 50, width: 50, borderRadius: 50 / 2}}
+                    style={styles.marker}
                   />
                 </Marker>
               )
@@ -229,6 +254,10 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
   },
+  friend_map: {
+    height: 500,
+    width: 400,
+  },
   view: {
     position: 'absolute',
     top: 0,
@@ -236,4 +265,5 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
   },
+  marker: {height: 50, width: 50, borderRadius: 50 / 2},
 });
