@@ -16,7 +16,6 @@ const HeaderProfile = ({
   id,
 }) => {
   const addContact = async () => {
-    // console.log(id);
     await dispatch(add(auth.data.token, id))
       .then(async () => {
         await dispatch(getContact(auth.data.token)).then(

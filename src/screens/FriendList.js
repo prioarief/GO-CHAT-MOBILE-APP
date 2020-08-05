@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import {RefreshControl, ScrollView, StyleSheet, View} from 'react-native';
 import {Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import io from 'socket.io-client';
 import {connect} from 'react-redux';
 import {FriendList} from '../components/molecules';
 import {getContact} from '../redux/actions/profile';
@@ -32,8 +33,18 @@ class Friends extends Component {
       })
       .catch((err) => console.log(err.response));
   };
-  async componentDidMount() {
-    await this.getFriendList();
+  componentDidMount() {
+    this.getFriendList();
+    this.socket = io(API_URL);
+    this.socket.on('contact', (res) => {
+      // this.setState({contact: res});
+      res.map((d) => {
+        if (d.user_id === this.props.auth.data.id) {
+          return this.setState({contact: res});
+        }
+        console.log(d.user_id, 'penasarannn');
+      });
+    });
   }
   render() {
     const {navigation} = this.props;
@@ -46,8 +57,7 @@ class Friends extends Component {
               onRefresh={this.onRefresh}
             />
           }>
-          {this.props.profile.data.map((data) => {
-            // console.log(data);
+          {this.state.contact.map((data) => {
             return (
               <FriendList
                 key={data.id}

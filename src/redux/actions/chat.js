@@ -42,3 +42,16 @@ export const sendMessage = (token, id, data) => {
     }),
   };
 };
+
+export const updateMessage = (token, id, data) => {
+  return {
+    type: 'UPDATE',
+    payload: axios({
+      method: 'PUT',
+      url: `${API_URL}/api/message/${id}`,
+      headers: {
+        Authorization: token,
+      },
+    }),
+  };
+};

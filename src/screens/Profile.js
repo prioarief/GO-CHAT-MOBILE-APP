@@ -11,7 +11,6 @@ import {editProfile, Logout} from '../redux/actions/auth';
 import Maps from './Maps';
 
 const Profile = ({navigation, route, auth, profile, dispatch, chat}) => {
-  // const [user, setUser] = useState('');
   const Avatar = () => {
     let isFriend = null;
     if (route.params === undefined) {
@@ -46,11 +45,9 @@ const Profile = ({navigation, route, auth, profile, dispatch, chat}) => {
     if (getData[0] !== undefined) {
       user = getData[0];
       isFriend = true;
-      console.log(getData, 'friend');
     } else {
       user = getChatData[0];
       isFriend = false;
-      console.log(getChatData);
     }
 
     return (
@@ -64,7 +61,6 @@ const Profile = ({navigation, route, auth, profile, dispatch, chat}) => {
               ? user.receiver
               : user.user
           }
-          // id={user.idFriend}
           image={
             user.friendImage === null
               ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcShi2vPDOkXvjMhrDuNwsxqh5RB0d1f1ZADVw&usqp=CAU'
@@ -76,7 +72,6 @@ const Profile = ({navigation, route, auth, profile, dispatch, chat}) => {
   };
 
   const Content = () => {
-    // console.log(isFriend);
     const handleLogout = async () => {
       await dispatch(Logout());
       navigation.replace('Login');
@@ -88,14 +83,10 @@ const Profile = ({navigation, route, auth, profile, dispatch, chat}) => {
           longitude: info.coords.longitude,
           latitude: info.coords.latitude,
         };
-
-        // console.log(data);
         if (
           data.longitude !== auth.data.longitude ||
           data.latitude !== auth.data.latitude
         ) {
-          // return await navigation.navigate('Maps');
-          // return console.log(data.latitude, auth.data.latitude);
           return await dispatch(editProfile(auth.data.token, data))
             .then(async (res) => {
               await navigation.navigate('Maps', {isMe: true});

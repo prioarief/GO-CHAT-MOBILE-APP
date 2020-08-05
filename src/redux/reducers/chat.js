@@ -10,7 +10,7 @@ const chat = (state = initialState, action) => {
     case 'MYCHAT_PENDING': {
       return {
         ...state,
-        isLoading: true,
+        isLoading: false,
       };
     }
     case 'MYCHAT_REJECTED': {
@@ -58,6 +58,24 @@ const chat = (state = initialState, action) => {
       };
     }
     case 'SEND_FULFILLED': {
+      return {
+        ...state,
+        isLoading: false,
+      };
+    }
+    case 'UPDATE_PENDING': {
+      return {
+        ...state,
+        // isLoading: true,
+      };
+    }
+    case 'UPDATE_REJECTED': {
+      return {
+        ...state,
+        isLoading: false,
+      };
+    }
+    case 'UPDATE_FULFILLED': {
       return {
         ...state,
         isLoading: false,

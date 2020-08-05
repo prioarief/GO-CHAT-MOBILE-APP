@@ -1,16 +1,19 @@
 import React, {Component} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {connect} from 'react-redux';
+import io from 'socket.io-client';
 import {ChatList} from '../components/molecules';
 import {getMyChat} from '../redux/actions/chat';
 import Date from '../utils/date';
+import {API_URL} from '@env';
 
 class ListChat extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      book: 'Data not found',
+      listChat: 'Data not found',
       isFriend: false,
+      id: this.props.auth.data.id,
     };
   }
   friendCheck = (id) => {
@@ -36,9 +39,28 @@ class ListChat extends Component {
       });
   };
 
-  componentDidMount = async () => {
-    await this.getLandingScreen();
+  componentDidMount = () => {
+    this.getLandingScreen();
+    this.socket = io(API_URL);
+    this.socket.on('chat-list', (res, id) => {
+      if (id === this.state.id) {
+        return this.setState({listChat: res});
+      }
+      // return console.log(this.state.id, 'no');
+    });
+
+    this.socket.on('chat', (res) => {
+      if (res.receiver === this.state.id) {
+        this.getLandingScreen();
+        return console.log('oke');
+      }
+    });
   };
+
+  componentWillUnmount() {
+    this.socket.removeAllListeners();
+    this.socket.disconnect();
+  }
 
   render() {
     return (
@@ -53,9 +75,12 @@ class ListChat extends Component {
                     navigation={this.props.navigation}
                     name={data.name}
                     message={data.message}
-                    time={Date(data.created_at, 'hh:ss a')}
+                    time={Date(data.created_at, 'hh:ss')}
                     image={data.image}
-                    status={true}
+                    status={
+                      data.user !== this.props.auth.data.id ? data.status : null
+                    }
+                    unRead={12}
                     onPress={() =>
                       this.props.navigation.navigate('Chat', {
                         id:
@@ -71,13 +96,6 @@ class ListChat extends Component {
           ) : (
             <Text style={styles.notfound}>Not Found</Text>
           )}
-          {/* <ChatList
-            name="Prio Arief Gunawan"
-            message="Halo"
-            time="16.00"
-            status={true}
-            onPress={() => navigation.navigate('Chat')}
-          /> */}
         </ScrollView>
       </View>
     );

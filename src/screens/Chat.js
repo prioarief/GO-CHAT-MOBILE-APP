@@ -7,7 +7,12 @@ import io from 'socket.io-client';
 import {Background} from '../assets';
 import {Header, InputChat} from '../components/atoms';
 import {ChatItem, Loading} from '../components/molecules';
-import {getMessage, getMyChat, sendMessage} from '../redux/actions/chat';
+import {
+  getMessage,
+  getMyChat,
+  sendMessage,
+  updateMessage,
+} from '../redux/actions/chat';
 import Date from '../utils/date';
 
 class Chat extends Component {
@@ -26,8 +31,13 @@ class Chat extends Component {
 
     await dispatch(getMessage(auth.data.token, route.params.id))
       .then(async (res) => {
-        await dispatch(getMyChat(auth.data.token));
-        await this.setState({message: this.props.chat.chat});
+        await dispatch(updateMessage(auth.data.token, route.params.id)).then(
+          async () => {
+            await dispatch(getMyChat(auth.data.token)).then(async () => {
+              this.setState({message: this.props.chat.chat});
+            });
+          },
+        );
       })
       .catch((err) => {
         console.log(err.response);
@@ -38,10 +48,12 @@ class Chat extends Component {
     const {dispatch, auth, route} = this.props;
     await dispatch(
       sendMessage(auth.data.token, route.params.id, this.state.newMessage),
-    ).then(async (res) => {
-      // await dispatch(getMyChat(auth.data.token));
-      await this.setState({newMessage: ''});
-    });
+    )
+      .then(async (res) => {
+        await dispatch(getMyChat(auth.data.token));
+        this.setState({newMessage: ''});
+      })
+      .catch((err) => console.log(err.response));
   };
 
   getContact = async () => {
@@ -66,7 +78,6 @@ class Chat extends Component {
   componentDidMount() {
     this.renderChat();
     this.getContact();
-    // console.log(this.state.isLoading);
     this.socket = io(API_URL);
     this.socket.on('chat', (res) => {
       const {id} = this.props.route.params;
@@ -76,9 +87,6 @@ class Chat extends Component {
     });
   }
 
-  // componentDidUpdate() {
-  //   console.log(this.props.chat.isLoading);
-  // }
   componentWillUnmount() {
     this.socket.removeAllListeners();
     this.socket.disconnect();
@@ -122,27 +130,6 @@ class Chat extends Component {
         </ImageBackground>
         {this.props.chat.isLoading && <Loading />}
       </>
-      // <>
-      //   <Header
-      //     name={name.friendName || name.name}
-      //     image={name.friendImage || name.image}
-      //     navigation={this.props.navigation}
-      //   />
-      //   <GiftedChat
-      //     messages={message}
-      //     onSend={(val) => this.onSend(val)}
-      //     // renderBubble={this.renderBubble}
-      //     // renderUsernameOnMessage={true}
-      //     user={{
-      //       _id: data.id,
-      //       name: data.name,
-      //       avatar: data.image,
-      //     }}
-      //     // showUserAvatar
-      //     scrollToBottom
-      //     placeholder="Type your message here..."
-      //   />
-      // </>
     );
   }
 }

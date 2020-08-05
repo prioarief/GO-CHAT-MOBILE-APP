@@ -14,6 +14,7 @@ import {Overlay, Button} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {HeaderSearch} from '../components/atoms';
 import {FriendList, Loading} from '../components/molecules';
+import {addContact, getContact} from '../redux/actions/profile';
 
 class Search extends Component {
   constructor(props) {
@@ -27,8 +28,30 @@ class Search extends Component {
     };
   }
 
+  AddContact = async () => {
+    const {detail} = this.state;
+    const {dispatch, auth, profile, navigation} = this.props;
+    await dispatch(addContact(auth.data.token, detail.id))
+      .then(async () => {
+        await dispatch(getContact(auth.data.token)).then(() =>
+          console.log(profile),
+        );
+      })
+      .catch((err) => console.log(err.response));
+  };
+
   ModalResult = () => {
     const {detail, visible} = this.state;
+    let isFriend = false;
+    const friends = this.props.profile.data;
+    const FriendCheck = friends.filter((e) => {
+      return e.idFriend === detail.id;
+    });
+    if (FriendCheck[0] === undefined) {
+      isFriend = false;
+    } else {
+      isFriend = true;
+    }
     return (
       <Overlay
         isVisible={visible}
@@ -46,7 +69,10 @@ class Search extends Component {
           />
           <Text style={styles.name}>{detail.name}</Text>
           <Text style={styles.bio}>Hello I'm Using Go Chat'</Text>
-          <Button title="Add Contact" />
+          {!isFriend && (
+            <Button title="Add Contact" onPress={() => this.AddContact()} />
+          )}
+          {isFriend && <Button title="Delete Contact" />}
         </View>
       </Overlay>
     );
@@ -83,7 +109,7 @@ class Search extends Component {
   };
 
   render() {
-    const {keyword, result, isLoading} = this.state;
+    const {keyword, result, isLoading, detail} = this.state;
     return (
       <>
         <View style={styles.container}>
@@ -95,7 +121,7 @@ class Search extends Component {
             onClear={() => this.setState({result: []})}
           />
           <View style={styles.content}>
-            {result.length > 0 && <Text style={styles.result}>Result</Text>}
+            {result !== null && <Text style={styles.result}>Result</Text>}
             {result !== null
               ? result.map((data) => {
                   return (
@@ -114,8 +140,8 @@ class Search extends Component {
                     />
                   );
                 })
-              : Alert.alert('Username not found')}
-            <this.ModalResult />
+              : ToastAndroid.show('User not found', ToastAndroid.SHORT)}
+            {detail && <this.ModalResult />}
           </View>
         </View>
         {isLoading && <Loading />}

@@ -3,6 +3,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {ListItem} from 'react-native-elements';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import {Divider} from '../atoms';
 
 const ChatList = ({
@@ -20,7 +21,7 @@ const ChatList = ({
         <ListItem
           containerStyle={styles.list}
           titleStyle={styles.item}
-          subtitleStyle={styles.message}
+          subtitleStyle={styles.message(status)}
           leftAvatar={{
             source: {
               uri:
@@ -32,7 +33,11 @@ const ChatList = ({
           subtitle={message}
           title={name}
           rightSubtitle={time}
-          // rightTitle={<Image source={status ? CheckedActive : Checked} />}
+          rightTitle={
+            status === 0 ? (
+              <Icon name="exclamation-circle" color="white" size={17} />
+            ) : null
+          }
           rightSubtitleStyle={styles.time}
         />
         <Divider />
@@ -50,9 +55,10 @@ const styles = StyleSheet.create({
   item: {
     color: '#f0f0f0',
   },
-  message: {
+  message: (status) => ({
     color: '#cfcfcf',
-  },
+    fontWeight: status === 0 ? 'bold' : '400',
+  }),
   time: {
     color: '#cfcfcf',
     fontSize: 12,
