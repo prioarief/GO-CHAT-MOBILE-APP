@@ -7,7 +7,7 @@
 ![GitHub forks](https://img.shields.io/github/forks/prioarief/GO-CHAT-MOBILE-APP?style=social)
 ![Twitter Follow](https://img.shields.io/twitter/follow/prioarief?style=social)
 
-Project name is a GO CHAT APP that allows people to read a book via online
+Project name is a GO CHAT APP that allows people to chatting with her friends
 
 GO CHAT is a chatting application and maps tracking. 
 
