@@ -1,4 +1,4 @@
-import {API_URL} from '@env';
+import {API_APP_URL} from '@env';
 import React, {Component} from 'react';
 import {ImageBackground, StyleSheet, Text} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -78,7 +78,7 @@ class Chat extends Component {
   componentDidMount() {
     this.renderChat();
     this.getContact();
-    this.socket = io(API_URL);
+    this.socket = io(API_APP_URL);
     this.socket.on('chat', (res) => {
       const {id} = this.props.route.params;
       if (res.receiver === id || res.user === id) {

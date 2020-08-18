@@ -62,6 +62,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#212121',
     padding: 10,
     flexDirection: 'column',
+    borderBottomLeftRadius: 75,
+    borderBottomRightRadius: 75,
+    paddingVertical: 30,
   },
   profile: {
     color: 'white',

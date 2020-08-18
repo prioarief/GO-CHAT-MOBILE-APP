@@ -1,12 +1,12 @@
 import axios from 'axios';
-import {API_URL} from '@env';
+import {API_APP_URL} from '@env';
 
 export const getMyChat = (token) => {
   return {
     type: 'MYCHAT',
     payload: axios({
       method: 'GET',
-      url: `${API_URL}/api/message`,
+      url: `${API_APP_URL}/api/message`,
       headers: {
         Authorization: token,
       },
@@ -19,7 +19,7 @@ export const getMessage = (token, id) => {
     type: 'CHAT',
     payload: axios({
       method: 'GET',
-      url: `${API_URL}/api/message/${id}`,
+      url: `${API_APP_URL}/api/message/${id}`,
       headers: {
         Authorization: token,
       },
@@ -32,7 +32,7 @@ export const sendMessage = (token, id, data) => {
     type: 'SEND',
     payload: axios({
       method: 'POST',
-      url: `${API_URL}/api/message/send-message/${id}`,
+      url: `${API_APP_URL}/api/message/send-message/${id}`,
       data: {
         message: data,
       },
@@ -48,7 +48,7 @@ export const updateMessage = (token, id, data) => {
     type: 'UPDATE',
     payload: axios({
       method: 'PUT',
-      url: `${API_URL}/api/message/${id}`,
+      url: `${API_APP_URL}/api/message/${id}`,
       headers: {
         Authorization: token,
       },

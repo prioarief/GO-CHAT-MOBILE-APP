@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {StyleSheet, Text, View, Image} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {API_URL} from '@env';
+import {API_APP_URL} from '@env';
 import {connect} from 'react-redux';
 
 const HeaderChat = ({navigation, name, image, id, auth}) => {
@@ -37,7 +37,7 @@ const HeaderChat = ({navigation, name, image, id, auth}) => {
           uri:
             image === null || image === undefined
               ? 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg'
-              : `${API_URL}/images/${image}`,
+              : `${API_APP_URL}/images/${image}`,
         }}
       />
       <TouchableOpacity

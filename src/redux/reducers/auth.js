@@ -15,6 +15,7 @@ const auth = (state = inialState, action) => {
     case 'LOGIN_REJECTED': {
       return {
         ...state,
+        isLoading: false,
         errorMessage: action.payload.response.data.data,
       };
     }
@@ -30,18 +31,21 @@ const auth = (state = inialState, action) => {
     case 'REGISTER_PENDING': {
       return {
         ...state,
+        isLoading: true,
         data: {},
       };
     }
     case 'REGISTER_REJECTED': {
       return {
         ...state,
+        isLoading: false,
         data: {},
       };
     }
     case 'REGISTER_FULFILLED': {
       return {
         ...state,
+        isLoading: false,
         data: action.payload.data.data,
       };
     }

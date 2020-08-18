@@ -1,12 +1,12 @@
 import axios from 'axios';
-import {API_URL} from '@env';
+import {API_APP_URL} from '@env';
 
 export const Login = (data) => {
   return {
     type: 'LOGIN',
     payload: axios({
       method: 'POST',
-      url: `${API_URL}/api/auth/login`,
+      url: `${API_APP_URL}/api/auth/login`,
       data: {
         username: data.username,
         password: data.password,
@@ -20,7 +20,7 @@ export const Register = (data) => {
     type: 'REGISTER',
     payload: axios({
       method: 'POST',
-      url: `${API_URL}/api/auth/register`,
+      url: `${API_APP_URL}/api/auth/register`,
       data: {
         username: data.username,
         password: data.password,
@@ -35,7 +35,7 @@ export const editProfile = (token, data) => {
     type: 'EDIT',
     payload: axios({
       method: 'PUT',
-      url: `${API_URL}/api/auth/profile`,
+      url: `${API_APP_URL}/api/auth/profile`,
       headers: {
         Authorization: token,
       },

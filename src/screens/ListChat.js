@@ -5,7 +5,9 @@ import io from 'socket.io-client';
 import {ChatList} from '../components/molecules';
 import {getMyChat} from '../redux/actions/chat';
 import Date from '../utils/date';
-import {API_URL} from '@env';
+import {API_APP_URL} from '@env';
+import Geolocation from '@react-native-community/geolocation';
+import {editProfile} from '../redux/actions/auth';
 
 class ListChat extends Component {
   constructor(props) {
@@ -16,6 +18,29 @@ class ListChat extends Component {
       id: this.props.auth.data.id,
     };
   }
+
+  getLocation = () => {
+    const {dispatch, auth} = this.props;
+    Geolocation.getCurrentPosition(async (info) => {
+      const data = {
+        longitude: info.coords.longitude,
+        latitude: info.coords.latitude,
+      };
+      if (
+        data.longitude !== auth.data.longitude ||
+        data.latitude !== auth.data.latitude
+      ) {
+        return await dispatch(editProfile(auth.data.token, data))
+          .then((res) => {})
+
+          .catch((err) => {
+            console.log(err.response);
+          });
+      }
+      return console.log('oke');
+    });
+  };
+
   friendCheck = (id) => {
     const data = this.props.profile.data;
     const getData = data.filter((val) => {
@@ -32,6 +57,7 @@ class ListChat extends Component {
     const {auth, dispatch} = this.props;
     await dispatch(getMyChat(auth.data.token))
       .then(async (res) => {
+        await this.getLocation();
         this.setState({listChat: res.value.data.data});
       })
       .catch((err) => {
@@ -39,9 +65,10 @@ class ListChat extends Component {
       });
   };
 
-  componentDidMount = () => {
+  componentDidMount = async () => {
+    // await this.getLocation();
     this.getLandingScreen();
-    this.socket = io(API_URL);
+    this.socket = io(API_APP_URL);
     this.socket.on('chat-list', (res, id) => {
       if (id === this.state.id) {
         return this.setState({listChat: res});
@@ -54,6 +81,10 @@ class ListChat extends Component {
         this.getLandingScreen();
         return console.log('oke');
       }
+    });
+
+    this.socket.on('read', (res) => {
+      console.log(res, 'read');
     });
   };
 
@@ -77,9 +108,8 @@ class ListChat extends Component {
                     message={data.message}
                     time={Date(data.created_at, 'hh:ss')}
                     image={data.image}
-                    status={
-                      data.user !== this.props.auth.data.id ? data.status : null
-                    }
+                    isMe={data.user === this.props.auth.data.id ? true : false}
+                    status={data.status}
                     unRead={12}
                     onPress={() =>
                       this.props.navigation.navigate('Chat', {

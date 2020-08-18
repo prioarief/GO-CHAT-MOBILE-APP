@@ -1,4 +1,4 @@
-import {API_URL} from '@env';
+import {API_APP_URL} from '@env';
 import React, {Component} from 'react';
 import {RefreshControl, ScrollView, StyleSheet, View} from 'react-native';
 import {Button} from 'react-native-elements';
@@ -26,26 +26,26 @@ class Friends extends Component {
   };
 
   getFriendList = async () => {
+    const token = this.props.auth.data.token;
     await this.props
-      .dispatch(getContact(this.props.auth.data.token))
+      .dispatch(getContact(token))
       .then(async (res) => {
         await this.setState({contact: this.props.profile.data});
       })
       .catch((err) => console.log(err.response));
   };
-  componentDidMount() {
+  componentDidMount = async () => {
     this.getFriendList();
-    this.socket = io(API_URL);
+    this.socket = io(API_APP_URL);
     this.socket.on('contact', (res) => {
       // this.setState({contact: res});
       res.map((d) => {
         if (d.user_id === this.props.auth.data.id) {
           return this.setState({contact: res});
         }
-        console.log(d.user_id, 'penasarannn');
       });
     });
-  }
+  };
   render() {
     const {navigation} = this.props;
     return (
@@ -65,7 +65,7 @@ class Friends extends Component {
                 image={
                   data.friendImage === null
                     ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcShi2vPDOkXvjMhrDuNwsxqh5RB0d1f1ZADVw&usqp=CAU'
-                    : `${API_URL}/images/${data.friendImage}`
+                    : `${API_APP_URL}/images/${data.friendImage}`
                 }
                 onPress={() =>
                   navigation.navigate('Chat', {

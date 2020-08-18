@@ -1,4 +1,4 @@
-import {API_URL} from '@env';
+import {API_APP_URL} from '@env';
 import React, {useState, useEffect} from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {Button, Input} from 'react-native-elements';
@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import {connect} from 'react-redux';
 import {Loading} from '../components/molecules';
 import {editProfile} from '../redux/actions/auth';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 const EditProfile = ({navigation, auth, dispatch}) => {
   const [loading, setLoading] = useState(false);
@@ -91,7 +92,8 @@ const EditProfile = ({navigation, auth, dispatch}) => {
           {user.image !== null && (
             <Image
               source={{
-                uri: user.image.uri || `${API_URL}/images/${auth.data.image}`,
+                uri:
+                  user.image.uri || `${API_APP_URL}/images/${auth.data.image}`,
               }}
               style={styles.image}
             />
@@ -126,13 +128,17 @@ const EditProfile = ({navigation, auth, dispatch}) => {
           leftIcon={<Icon name="lock" size={24} color="#cccccc" />}
         />
 
-        <Button
-          titleStyle={styles.button_image}
-          buttonStyle={styles.button_image}
-          containerStyle={styles.containerButton}
-          title="Choose Image"
-          onPress={handleImage}
-        />
+        <View style={styles.pencil}>
+          <TouchableOpacity>
+            <Icon
+              name="pencil-alt"
+              size={24}
+              color="black"
+              onPress={handleImage}
+            />
+          </TouchableOpacity>
+        </View>
+
         <Button
           titleStyle={styles.button}
           buttonStyle={styles.button}
@@ -196,4 +202,12 @@ const styles = StyleSheet.create({
   containerButton: {marginBottom: 10, width: 120},
   containerImage: {alignItems: 'center', paddingBottom: 20},
   image: {width: 150, height: 150, borderRadius: 150 / 2},
+  pencil: {
+    position: 'absolute',
+    backgroundColor: 'orange',
+    top: 220,
+    left: 230,
+    padding: 10,
+    borderRadius: 20,
+  },
 });

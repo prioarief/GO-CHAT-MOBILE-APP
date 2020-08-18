@@ -1,5 +1,4 @@
-import {API_URL} from '@env';
-import Geolocation from '@react-native-community/geolocation';
+import {API_APP_URL} from '@env';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {ListItem} from 'react-native-elements';
@@ -7,7 +6,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {connect} from 'react-redux';
 import {HeaderProflie} from '../components/atoms';
-import {editProfile, Logout} from '../redux/actions/auth';
+import {Logout} from '../redux/actions/auth';
 import Maps from './Maps';
 
 const Profile = ({navigation, route, auth, profile, dispatch, chat}) => {
@@ -24,7 +23,7 @@ const Profile = ({navigation, route, auth, profile, dispatch, chat}) => {
             image={
               auth.data.image === null
                 ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcShi2vPDOkXvjMhrDuNwsxqh5RB0d1f1ZADVw&usqp=CAU'
-                : `${API_URL}/images/${auth.data.image}`
+                : `${API_APP_URL}/images/${auth.data.image}`
             }
           />
         </>
@@ -64,7 +63,7 @@ const Profile = ({navigation, route, auth, profile, dispatch, chat}) => {
           image={
             user.friendImage === null
               ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcShi2vPDOkXvjMhrDuNwsxqh5RB0d1f1ZADVw&usqp=CAU'
-              : `${API_URL}/images/${user.friendImage || user.image}`
+              : `${API_APP_URL}/images/${user.friendImage || user.image}`
           }
         />
       </>
@@ -77,31 +76,9 @@ const Profile = ({navigation, route, auth, profile, dispatch, chat}) => {
       navigation.replace('Login');
     };
 
-    const getLocation = async () => {
-      await Geolocation.getCurrentPosition(async (info) => {
-        const data = {
-          longitude: info.coords.longitude,
-          latitude: info.coords.latitude,
-        };
-        if (
-          data.longitude !== auth.data.longitude ||
-          data.latitude !== auth.data.latitude
-        ) {
-          return await dispatch(editProfile(auth.data.token, data))
-            .then(async (res) => {
-              await navigation.navigate('Maps', {isMe: true});
-            })
-
-            .catch((err) => {
-              console.log(err.response);
-            });
-        }
-        return console.log('oke');
-      });
-    };
     if (route.params === undefined) {
       return (
-        <>
+        <View>
           <TouchableOpacity onPress={() => navigation.navigate('Edit Profile')}>
             <ListItem
               titleStyle={styles.item}
@@ -121,9 +98,7 @@ const Profile = ({navigation, route, auth, profile, dispatch, chat}) => {
             />
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={async () => {
-              await getLocation();
-            }}>
+            onPress={async () => navigation.navigate('Maps', {isMe: true})}>
             <ListItem
               titleStyle={styles.item}
               key={3}
@@ -141,7 +116,7 @@ const Profile = ({navigation, route, auth, profile, dispatch, chat}) => {
               bottomDivider
             />
           </TouchableOpacity>
-        </>
+        </View>
       );
     }
     return <Maps friendId={route.params.isMe} />;

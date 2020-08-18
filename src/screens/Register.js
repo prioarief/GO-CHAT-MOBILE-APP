@@ -5,8 +5,9 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import {connect} from 'react-redux';
 import {Register as RegisterProcess} from '../redux/actions/auth';
 import {showMessage} from 'react-native-flash-message';
+import {Loading} from '../components/molecules';
 
-const Register = ({navigation, dispatch}) => {
+const Register = ({navigation, dispatch, auth}) => {
   const [user, setUser] = useState({name: '', username: '', password: ''});
 
   const handleRegister = async () => {
@@ -15,6 +16,19 @@ const Register = ({navigation, dispatch}) => {
       username: user.username,
       password: user.password,
     };
+
+    if (
+      data.username.length === 0 ||
+      data.password.length === 0 ||
+      data.name.length === 0
+    ) {
+      return showMessage({
+        message: 'Username, name or password is empty',
+        type: 'error',
+        backgroundColor: 'red',
+        color: 'white',
+      });
+    }
 
     await dispatch(RegisterProcess(data))
       .then((res) => {
@@ -36,54 +50,57 @@ const Register = ({navigation, dispatch}) => {
       });
   };
   return (
-    <View style={styles.container}>
-      <Text title="" style={styles.title}>
-        Welcome Back, Please Register to get your account
-      </Text>
-      <Input
-        importantForAutofill="yes"
-        placeholderTextColor="#cccccc"
-        inputStyle={styles.input}
-        placeholder="Name"
-        value={user.name}
-        onChangeText={(input) => setUser({...user, name: input})}
-        leftIcon={<Icon name="user" size={24} color="#cccccc" />}
-      />
-      <Input
-        importantForAutofill="yes"
-        placeholderTextColor="#cccccc"
-        inputStyle={styles.input}
-        placeholder="Username"
-        value={user.username}
-        onChangeText={(input) => setUser({...user, username: input})}
-        leftIcon={<Icon name="user-circle" size={24} color="#cccccc" />}
-      />
-      <Input
-        style={styles.input}
-        placeholderTextColor="#cccccc"
-        inputStyle={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        value={user.password}
-        onChangeText={(input) => setUser({...user, password: input})}
-        leftIcon={<Icon name="lock" size={24} color="#cccccc" />}
-      />
-
-      <Button
-        titleStyle={styles.button}
-        buttonStyle={styles.button}
-        title="Register"
-        onPress={handleRegister}
-      />
-      <View style={styles.register}>
-        <Text style={styles.not}>Already Account?</Text>
-        <Text
-          style={styles.button_register}
-          onPress={() => navigation.replace('Login')}>
-          Login
+    <>
+      <View style={styles.container}>
+        <Text title="" style={styles.title}>
+          Welcome Back, Please Register to get your account
         </Text>
+        <Input
+          importantForAutofill="yes"
+          placeholderTextColor="#cccccc"
+          inputStyle={styles.input}
+          placeholder="Name"
+          value={user.name}
+          onChangeText={(input) => setUser({...user, name: input})}
+          leftIcon={<Icon name="user" size={24} color="#cccccc" />}
+        />
+        <Input
+          importantForAutofill="yes"
+          placeholderTextColor="#cccccc"
+          inputStyle={styles.input}
+          placeholder="Username"
+          value={user.username}
+          onChangeText={(input) => setUser({...user, username: input})}
+          leftIcon={<Icon name="user-circle" size={24} color="#cccccc" />}
+        />
+        <Input
+          style={styles.input}
+          placeholderTextColor="#cccccc"
+          inputStyle={styles.input}
+          placeholder="Password"
+          secureTextEntry
+          value={user.password}
+          onChangeText={(input) => setUser({...user, password: input})}
+          leftIcon={<Icon name="lock" size={24} color="#cccccc" />}
+        />
+
+        <Button
+          titleStyle={styles.button}
+          buttonStyle={styles.button}
+          title="Register"
+          onPress={handleRegister}
+        />
+        <View style={styles.register}>
+          <Text style={styles.not}>Already Account?</Text>
+          <Text
+            style={styles.button_register}
+            onPress={() => navigation.replace('Login')}>
+            Login
+          </Text>
+        </View>
       </View>
-    </View>
+      {auth.isLoading && <Loading />}
+    </>
   );
 };
 

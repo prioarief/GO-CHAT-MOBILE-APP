@@ -21,7 +21,7 @@ import {
 const Stack = createStackNavigator();
 const Tab = createMaterialTopTabNavigator();
 
-const MainApp = () => {
+const MainApp = ({navigation}) => {
   return (
     <>
       <View style={styles.header}>
@@ -31,7 +31,7 @@ const MainApp = () => {
           color="white"
           size={30}
           style={styles.icon}
-          onPress={() => console.log('oke')}
+          onPress={() => navigation.navigate('Contact')}
         />
       </View>
       <Tab.Navigator

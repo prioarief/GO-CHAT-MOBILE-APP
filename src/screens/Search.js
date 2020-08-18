@@ -1,16 +1,15 @@
-import {API_URL} from '@env';
+import {API_APP_URL} from '@env';
 import Axios from 'axios';
 import React, {Component} from 'react';
 import {
-  Alert,
   Dimensions,
+  Image,
   StyleSheet,
   Text,
-  View,
   ToastAndroid,
-  Image,
+  View,
 } from 'react-native';
-import {Overlay, Button} from 'react-native-elements';
+import {Button, Overlay} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {HeaderSearch} from '../components/atoms';
 import {FriendList, Loading} from '../components/molecules';
@@ -30,7 +29,7 @@ class Search extends Component {
 
   AddContact = async () => {
     const {detail} = this.state;
-    const {dispatch, auth, profile, navigation} = this.props;
+    const {dispatch, auth, profile} = this.props;
     await dispatch(addContact(auth.data.token, detail.id))
       .then(async () => {
         await dispatch(getContact(auth.data.token)).then(() =>
@@ -64,7 +63,7 @@ class Search extends Component {
               uri:
                 detail.image === null
                   ? 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg'
-                  : `${API_URL}/images/${detail.image}`,
+                  : `${API_APP_URL}/images/${detail.image}`,
             }}
           />
           <Text style={styles.name}>{detail.name}</Text>
@@ -72,7 +71,7 @@ class Search extends Component {
           {!isFriend && (
             <Button title="Add Contact" onPress={() => this.AddContact()} />
           )}
-          {isFriend && <Button title="Delete Contact" />}
+          {/* {isFriend && <Button title="Delete Contact" />} */}
         </View>
       </Overlay>
     );
@@ -86,7 +85,7 @@ class Search extends Component {
     }
     await Axios({
       method: 'POST',
-      url: `${API_URL}/api/auth/contact`,
+      url: `${API_APP_URL}/api/auth/contact`,
       params: {
         search: this.state.keyword,
       },
@@ -130,7 +129,7 @@ class Search extends Component {
                       name={data.name}
                       image={
                         data.image !== null
-                          ? `${API_URL}/images/${data.image}`
+                          ? `${API_APP_URL}/images/${data.image}`
                           : null
                       }
                       onPress={() => {
